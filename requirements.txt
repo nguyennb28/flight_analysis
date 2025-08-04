@@ -1,0 +1,16 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+numpy
+pandas
+django-extensions
+openpyxl
+asgiref
+pytz
+python-dotenv
+django-cors-headers
+packaging
+PyJWT
+mysqlclient
+gunicorn
+uvicorn
