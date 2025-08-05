@@ -1,10 +1,28 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import UserMetaCard from "../components/UserProfile/UserMetaCard";
 import UserInfoCard from "../components/UserProfile/UserInfoCard";
-import UserAddressCard from "../components/UserProfile/UserAddressCard";
 import PageMeta from "../components/common/PageMeta";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useLoading } from "../context/LoadingContext";
 
 export default function UserProfiles() {
+  // Context
+  const { user } = useAuth();
+  const { loading, showLoading, hideLoading } = useLoading();
+
+  useEffect(() => {
+    if (!user) {
+      showLoading();
+    } else {
+      hideLoading();
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading....</div>;
+  }
+
   return (
     <>
       <PageMeta
@@ -17,9 +35,26 @@ export default function UserProfiles() {
           Profile
         </h3>
         <div className="space-y-6">
-          <UserMetaCard />
-          <UserInfoCard />
-          <UserAddressCard />
+          {user && (
+            <>
+              <UserMetaCard
+                id={user.id}
+                first_name={user.first_name}
+                last_name={user.last_name}
+                full_name={user.full_name}
+                role={user.role}
+                phone={user.phone}
+              />
+              <UserInfoCard
+                id={user.id}
+                first_name={user.first_name}
+                last_name={user.last_name}
+                full_name={user.full_name}
+                role={user.role}
+                phone={user.phone}
+              />
+            </>
+          )}
         </div>
       </div>
     </>

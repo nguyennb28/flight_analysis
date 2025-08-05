@@ -4,7 +4,23 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 
-export default function UserInfoCard() {
+interface Props {
+  id: number;
+  first_name: string | null;
+  last_name: string | null;
+  full_name: string | null;
+  role: string | null;
+  phone: string | null;
+}
+
+const UserInfoCard = ({
+  id,
+  first_name,
+  last_name,
+  full_name,
+  role,
+  phone,
+}: Props) => {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
@@ -25,7 +41,7 @@ export default function UserInfoCard() {
                 First Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Musharof
+                {first_name}
               </p>
             </div>
 
@@ -34,16 +50,7 @@ export default function UserInfoCard() {
                 Last Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Chowdhury
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Email address
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                randomuser@pimjo.com
+                {last_name}
               </p>
             </div>
 
@@ -52,16 +59,16 @@ export default function UserInfoCard() {
                 Phone
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                +09 363 398 46
+                {phone ? phone : "Không có dữ liệu"}
               </p>
             </div>
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Bio
+                Role
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Team Manager
+                {role}
               </p>
             </div>
           </div>
@@ -181,4 +188,5 @@ export default function UserInfoCard() {
       </Modal>
     </div>
   );
-}
+};
+export default UserInfoCard;
