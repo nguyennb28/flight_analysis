@@ -25,7 +25,6 @@ interface IAuthContext {
   user: IUser | null;
   userLoading: boolean;
   login: (
-    tax_code: string,
     username: string,
     password: string
   ) => Promise<{ access: string; refresh: string; user: IUser }>;
@@ -50,13 +49,11 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const [userLoading, setUserLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const login = async (
-    tax_code: string,
     username: string,
     password: string
   ) => {
     try {
       const { data: tokenData } = await axiosInstance.post("/token/", {
-        tax_code,
         username,
         password,
       });
@@ -66,7 +63,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
       const { data: userData } = await axiosInstance.get("/users/me/");
       setUser(userData);
-      localStorage.setItem("companyTaxCode", userData.tax_code);
       return { access, refresh, user: userData };
     } catch (err: any) {
       throw new Error(err.reponse?.data?.detail || "Đăng nhập thất bại");
