@@ -5,8 +5,25 @@ import MonthlyTarget from "../../components/ecommerce/MonthlyTarget";
 import RecentOrders from "../../components/ecommerce/RecentOrders";
 import DemographicCard from "../../components/ecommerce/DemographicCard";
 import PageMeta from "../../components/common/PageMeta";
+import { useAuth } from "../../context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export default function Home() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+    if (!user) {
+      logout();
+      navigate("/signin", { replace: true });
+    }
+  }, []);
+
   return (
     <>
       <PageMeta
