@@ -1,6 +1,7 @@
 import { useModal } from "../../hooks/useModal";
 interface Props {
   id: number;
+  username: string;
   first_name: string | null;
   last_name: string | null;
   full_name: string | null;
@@ -10,6 +11,7 @@ interface Props {
 
 const UserMetaCard = ({
   id,
+  username,
   first_name,
   last_name,
   full_name,
@@ -28,6 +30,9 @@ const UserMetaCard = ({
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
                 {full_name}
               </h4>
+              <h5 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
+                {username}
+              </h5>
             </div>
           </div>
         </div>

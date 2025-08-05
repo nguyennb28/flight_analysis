@@ -3,28 +3,54 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import { useForm } from "react-hook-form";
+import { User } from "../../types/general_type";
 
 interface Props {
   id: number;
+  username: string;
   first_name: string | null;
   last_name: string | null;
   full_name: string | null;
   role: string | null;
   phone: string | null;
+  onSubmit: (data: User) => void;
 }
 
 const UserInfoCard = ({
   id,
+  username,
   first_name,
   last_name,
   full_name,
   role,
   phone,
+  onSubmit,
 }: Props) => {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
+
+  const ROLES = [
+    { value: "admin", label: "Admin" },
+    { value: "user", label: "User" },
+  ];
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>({
+    defaultValues: {
+      username: username || "",
+      first_name: first_name || "",
+      last_name: last_name || "",
+      role: role || "user",
+      phone: phone || "",
+      id: id,
+    },
+  });
+
+  const handleSave = (data: User) => {
+    onSubmit(data);
     closeModal();
   };
   return (
@@ -36,6 +62,15 @@ const UserInfoCard = ({
           </h4>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
+            <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                Username
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                {username}
+              </p>
+            </div>
+
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
                 Họ
@@ -106,79 +141,108 @@ const UserInfoCard = ({
           </div>
           <form className="flex flex-col">
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
-              <div>
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Label>Facebook</Label>
-                    <Input
-                      type="text"
-                      value="https://www.facebook.com/PimjoHQ"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>X.com</Label>
-                    <Input type="text" value="https://x.com/PimjoHQ" />
-                  </div>
-
-                  <div>
-                    <Label>Linkedin</Label>
-                    <Input
-                      type="text"
-                      value="https://www.linkedin.com/company/pimjo"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input type="text" value="https://instagram.com/PimjoHQ" />
-                  </div>
-                </div>
-              </div>
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Personal Information
+                  Thông tin cá nhân
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
-                    <Input type="text" value="Musharof" />
+                    <Label>username</Label>
+                    <input
+                      type="text"
+                      {...register("username", {
+                        required: "Nhập username",
+                      })}
+                    />
+                    {errors.username && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.username.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
-                    <Input type="text" value="Chowdhury" />
+                    <Label>Họ</Label>
+                    <input
+                      type="text"
+                      {...register("first_name", {
+                        required: "Nhập họ",
+                      })}
+                    />
+                    {errors.first_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.first_name.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Email Address</Label>
-                    <Input type="text" value="randomuser@pimjo.com" />
+                    <Label>Tên</Label>
+                    <input
+                      type="text"
+                      {...register("last_name", {
+                        required: "Nhập tên",
+                      })}
+                    />
+                    {errors.last_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.last_name.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
-                    <Input type="text" value="+09 363 398 46" />
+                    <Label>Số điện thoại</Label>
+                    <input
+                      type="text"
+                      {...register("phone", {
+                        required: "Bạn phải nhập số điện thoại",
+                        pattern: {
+                          value: /^[0-9]+$/,
+                          message: "Số điện thoại chỉ được chứa số",
+                        },
+                        minLength: {
+                          value: 9,
+                          message: "Số điện thoại tối thiểu 9 chữ số",
+                        },
+                        maxLength: {
+                          value: 15,
+                          message: "Số điện thoại tối đa 15 chữ số",
+                        },
+                      })}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.phone.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" value="Team Manager" />
+                    <Label>Phân quyền</Label>
+                    <select {...register("role")}>
+                      <option value="">--- CHỌN ---</option>
+                      {ROLES.map((item) => (
+                        <option key={item.value} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
-                Close
+              <Button size="md" variant="outline" onClick={closeModal}>
+                Đóng
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                Save Changes
-              </Button>
+              <button
+                className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
+                type="submit"
+              >
+                Cập nhật
+              </button>
             </div>
           </form>
         </div>
