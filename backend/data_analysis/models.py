@@ -10,6 +10,8 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=50, choices=ROLE_CHOICES, default="user", verbose_name="Role"
     )
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.get_full_name()
