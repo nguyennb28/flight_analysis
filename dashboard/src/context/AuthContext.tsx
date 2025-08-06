@@ -157,7 +157,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        await checkAuth();
+        // await checkAuth();
         const access = localStorage.getItem("access");
         if (access) {
           const { data: response } = await axiosInstance.get("/users/me/");

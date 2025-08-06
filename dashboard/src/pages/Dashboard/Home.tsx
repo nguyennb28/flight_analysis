@@ -19,10 +19,6 @@ export default function Home() {
       logout();
       navigate("/signin", { replace: true });
     }
-    if (!user) {
-      logout();
-      navigate("/signin", { replace: true });
-    }
   }, []);
 
   return (
