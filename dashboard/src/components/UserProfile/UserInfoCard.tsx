@@ -143,15 +143,16 @@ const UserInfoCard = ({
           <form onSubmit={handleSubmit(handleSave)} className="flex flex-col">
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
               <div className="mt-7">
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                <h5 className="mb-5 text-2xl font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Thông tin cá nhân
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>username</Label>
+                    <label className="label-form">username</label>
                     <input
                       type="text"
+                      className="form-input"
                       {...register("username", {
                         required: "Nhập username",
                       })}
@@ -164,14 +165,19 @@ const UserInfoCard = ({
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Mật khẩu</Label>
-                    <input type="password" {...register("password")} />
+                    <label className="label-form">Mật khẩu</label>
+                    <input
+                      type="password"
+                      className="form-input"
+                      {...register("password")}
+                    />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Họ</Label>
+                    <label className="lable-form">Họ</label>
                     <input
                       type="text"
+                      className="form-input"
                       {...register("first_name", {
                         required: "Nhập họ",
                       })}
@@ -184,9 +190,10 @@ const UserInfoCard = ({
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Tên</Label>
+                    <label>Tên</label>
                     <input
                       type="text"
+                      className="form-input"
                       {...register("last_name", {
                         required: "Nhập tên",
                       })}
@@ -199,9 +206,10 @@ const UserInfoCard = ({
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Số điện thoại</Label>
+                    <label className="label-form">Số điện thoại</label>
                     <input
                       type="text"
+                      className="form-input"
                       {...register("phone", {
                         required: "Bạn phải nhập số điện thoại",
                         pattern: {
@@ -226,8 +234,8 @@ const UserInfoCard = ({
                   </div>
 
                   <div className="col-span-2">
-                    <Label>Phân quyền</Label>
-                    <select {...register("role")}>
+                    <label className="label-form">Phân quyền</label>
+                    <select {...register("role")} className="form-input">
                       <option value="">--- CHỌN ---</option>
                       {ROLES.map((item) => (
                         <option key={item.value} value={item.value}>

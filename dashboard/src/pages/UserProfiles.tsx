@@ -16,6 +16,7 @@ export default function UserProfiles() {
   const { loading, showLoading, hideLoading } = useLoading();
   const navigate = useNavigate();
 
+  // Feature
   const onSubmit = async (data: User) => {
     if (!data) {
       Swal.fire({
@@ -26,7 +27,10 @@ export default function UserProfiles() {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/users/${data.id}/`, {
+      if (data.password?.length == 0 || !data.password) {
+        delete data.password;
+      }
+      const response = await axiosInstance.patch(`/users/${data.id}/`, {
         ...data,
       });
       if (response.status == 200) {
@@ -36,6 +40,7 @@ export default function UserProfiles() {
           text: "Cập nhật thành công",
           timer: 1000,
         });
+        window.location.reload();
       }
     } catch (err: any) {
       console.error(err);
