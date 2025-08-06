@@ -8,11 +8,13 @@ import { useLoading } from "../context/LoadingContext";
 import Swal from "sweetalert2";
 import { User } from "../types/general_type";
 import axiosInstance from "../instance/axiosInstance";
+import { useNavigate } from "react-router";
 
 export default function UserProfiles() {
   // Context
   const { user } = useAuth();
   const { loading, showLoading, hideLoading } = useLoading();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: User) => {
     if (!data) {
@@ -24,11 +26,17 @@ export default function UserProfiles() {
       return;
     }
     try {
-      // const response = await axiosInstance.put(`/api/users/${data.id}`, {
-      //   ...data
-      // })
-      console.log(data);
-      // console.log({ ...data });
+      const response = await axiosInstance.put(`/users/${data.id}/`, {
+        ...data,
+      });
+      if (response.status == 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Cập nhật",
+          text: "Cập nhật thành công",
+          timer: 1000,
+        });
+      }
     } catch (err: any) {
       console.error(err);
       Swal.fire({
@@ -46,6 +54,13 @@ export default function UserProfiles() {
       hideLoading();
     }
   }, [user]);
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
 
   if (loading) {
     return <div>Loading....</div>;

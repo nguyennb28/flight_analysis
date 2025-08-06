@@ -28,6 +28,7 @@ export default function SignIn() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
+    console.log(access);
     if (access) {
       navigate("/", { replace: true });
     }
@@ -40,7 +41,7 @@ export default function SignIn() {
         description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <AuthLayout>
-        <SignInForm onSubmit={onSubmit}/>
+        <SignInForm onSubmit={onSubmit} />
       </AuthLayout>
     </>
   );

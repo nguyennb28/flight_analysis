@@ -16,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {
+      logout();
       navigate("/signin", { replace: true });
     }
     if (!user) {

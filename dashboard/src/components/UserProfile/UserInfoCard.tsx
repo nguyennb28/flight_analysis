@@ -41,6 +41,7 @@ const UserInfoCard = ({
   } = useForm<User>({
     defaultValues: {
       username: username || "",
+      password: "",
       first_name: first_name || "",
       last_name: last_name || "",
       role: role || "user",
@@ -139,7 +140,7 @@ const UserInfoCard = ({
               Chỉnh sửa thông tin cá nhân
             </h4>
           </div>
-          <form className="flex flex-col">
+          <form onSubmit={handleSubmit(handleSave)} className="flex flex-col">
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
@@ -160,6 +161,11 @@ const UserInfoCard = ({
                         {errors.username.message}
                       </p>
                     )}
+                  </div>
+
+                  <div className="col-span-2 lg:col-span-1">
+                    <Label>Mật khẩu</Label>
+                    <input type="password" {...register("password")} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
@@ -237,12 +243,17 @@ const UserInfoCard = ({
               <Button size="md" variant="outline" onClick={closeModal}>
                 Đóng
               </Button>
-              <button
+              {/* <button
                 className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
                 type="submit"
               >
                 Cập nhật
-              </button>
+              </button> */}
+              <input
+                type="submit"
+                className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
+                value="Cập nhật"
+              />
             </div>
           </form>
         </div>
