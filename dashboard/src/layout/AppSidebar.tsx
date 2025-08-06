@@ -17,6 +17,7 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
+import { FaPlane } from "react-icons/fa";
 
 type NavItem = {
   name: string;
@@ -30,6 +31,11 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "Dashboard",
     subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+  },
+  {
+    icon: <FaPlane />,
+    name: "Chuyến bay",
+    path: "/flight",
   },
   {
     icon: <CalenderIcon />,
