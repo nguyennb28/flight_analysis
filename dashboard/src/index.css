@@ -776,3 +776,15 @@ span.flatpickr-weekday,
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
 }
+
+.form-input {
+  @apply border-2 rounded-xl w-full p-3 border-black shadow-md text-xl;
+}
+
+.error-msg {
+  @apply mt-3 text-red-500 self-start text-xl;
+}
+
+.label-form {
+  @apply uppercase text-xl;
+}
