@@ -28,7 +28,6 @@ export default function SignIn() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    console.log(access);
     if (access) {
       navigate("/", { replace: true });
     }
