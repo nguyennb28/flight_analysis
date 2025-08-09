@@ -1,7 +1,18 @@
+import { useEffect } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
+import { useNavigate } from "react-router";
 
 const Flight = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
+
   return (
     <>
       <PageMeta title="Flight" description="Flight" />
@@ -10,9 +21,7 @@ const Flight = () => {
         <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
           Chuyến bay
         </h3>
-        <div className="space-y-6">
-            
-        </div>
+        <div className="space-y-6"></div>
       </div>
     </>
   );

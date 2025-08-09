@@ -15,3 +15,16 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.get_full_name()
+
+class Flight(models.Model):
+    brand = models.CharField(max_length=100, blank=True, null=True)
+    nationality_label = models.CharField(max_length=25, blank=True, null=True)
+    flight_number = models.CharField(max_length=25, blank=True, null=True)
+    flight_date = models.DateField(blank=True, null=True)
+    departure_point = models.TextField(blank=True, null=True)
+    destination_point = models.TextField(blank=True, null=True)
+    flight_path = models.TextField(blank=True, null=True)
+    trasit_place = models.TextField(blank=True, null=True)
+
+# class GeneralInfo(models.Model):
+    
