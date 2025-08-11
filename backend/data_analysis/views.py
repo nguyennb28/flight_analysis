@@ -284,8 +284,8 @@ class UploadExcel(APIView):
                                     trasit_place=row["trasit_place"],
                                 )
                             )
-                        Flight.objects.bulk_create(objects_to_create, returning=["id"])
-                        foreign_key = Flight.objects.latest("id")
+                        Flight.objects.bulk_create(objects_to_create)
+                        foreign_key = Flight.objects.latest("id").id
 
                     case "Thongtinchung":
                         columns_to_drop = ["Through on same flight"]
@@ -308,7 +308,7 @@ class UploadExcel(APIView):
                                     place_of_origin=row["place_of_origin"],
                                     destination_point=row["destination_point"],
                                     place_of_entry=row["place_of_entry"],
-                                    flight=foreign_key,
+                                    flight_id=foreign_key,
                                 )
                             )
                         GeneralInfo.objects.bulk_create(objects_to_create)
@@ -349,10 +349,10 @@ class UploadExcel(APIView):
                                     first_airport=row["first_airport"],
                                     luggage=row["luggage"],
                                     expiration_date=row["expiration_date"],
-                                    flight=foreign_key,
+                                    flight_id=foreign_key,
                                 )
                             )
-                        Passenger.objects.bulk_create(objects_to_create)
+                        # Passenger.objects.bulk_create(objects_to_create)
                     case "PNR":
                         first_result = first_result.rename(
                             columns={
@@ -392,10 +392,10 @@ class UploadExcel(APIView):
                                     number_of_seat=row["number_of_seat"],
                                     luggage_info=row["luggage_info"],
                                     note=row["note"],
-                                    flight=foreign_key,
+                                    flight_id=foreign_key,
                                 )
                             )
-                        PassengerPNR.objects.bulk_create(PassengerPNR)
+                        # PassengerPNR.objects.bulk_create(PassengerPNR)
 
         if sheet["second_row"]:
             if sheet["second_nrows"]:
@@ -442,10 +442,10 @@ class UploadExcel(APIView):
                                     type_of_document=row["type_of_document"],
                                     place_of_issue=row["place_of_issue"],
                                     expiration_date=row["expiration_date"],
-                                    flight=foreign_key,
+                                    flight_id=foreign_key,
                                 )
                             )
-                        Member.objects.bulk_create(objects_to_create)
+                        # Member.objects.bulk_create(objects_to_create)
 
         if first_result is not None:
             print(first_result)
