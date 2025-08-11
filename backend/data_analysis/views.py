@@ -17,6 +17,7 @@ from django.db.models.functions import Concat
 from rest_framework.parsers import MultiPartParser, FormParser
 import pandas as pd
 from django.db import transaction
+from .models import Flight, GeneralInfo, Member, Passenger, PassengerPNR
 
 
 # Create your views here.
@@ -230,6 +231,7 @@ class UploadExcel(APIView):
         sheet = None
         first_result = None
         second_result = None
+        foreign_key = None
 
         for elem in self.LABEL_NAMES:
             for detail in elem:
@@ -269,6 +271,22 @@ class UploadExcel(APIView):
                                 "Nơi quá cảnh": "trasit_place",
                             }
                         )
+                        objects_to_create = []
+                        for index, row in first_result.iterrows():
+                            objects_to_create.append(
+                                Flight(
+                                    brand=row["brand"],
+                                    nationality_label=row["nationality_label"],
+                                    flight_number=row["flight_number"],
+                                    departure_point=row["departure_point"],
+                                    destination_point=row["destination_point"],
+                                    flight_path=row["flight_path"],
+                                    trasit_place=row["trasit_place"],
+                                )
+                            )
+                        Flight.objects.bulk_create(objects_to_create, returning=["id"])
+                        foreign_key = Flight.objects.latest("id")
+
                     case "Thongtinchung":
                         columns_to_drop = ["Through on same flight"]
                         first_result = first_result.drop(columns_to_drop, axis=1)
@@ -281,6 +299,19 @@ class UploadExcel(APIView):
                                 "Nơi nhập cảnh": "place_of_entry",
                             }
                         )
+                        objects_to_create = []
+                        for index, row in first_result.iterrows():
+                            objects_to_create.append(
+                                GeneralInfo(
+                                    number_of_guests=row["number_of_guests"],
+                                    departure_point=row["departure_point"],
+                                    place_of_origin=row["place_of_origin"],
+                                    destination_point=row["destination_point"],
+                                    place_of_entry=row["place_of_entry"],
+                                    flight=foreign_key,
+                                )
+                            )
+                        GeneralInfo.objects.bulk_create(objects_to_create)
                     case "Hanhkhach":
                         first_result = first_result.rename(
                             columns={
@@ -300,6 +331,28 @@ class UploadExcel(APIView):
                                 "Ngày hết hạn": "expiration_date",
                             }
                         )
+                        objects_to_create = []
+                        for index, row in first_result.iterrows():
+                            objects_to_create.append(
+                                Passenger(
+                                    number_of_seat=row["number_of_seat"],
+                                    name=row["name"],
+                                    sex=row["sex"],
+                                    nationality=row["nationality"],
+                                    date_of_birth=row["date_of_birth"],
+                                    type_of_document=row["type_of_document"],
+                                    number_of_document=row["number_of_document"],
+                                    place_of_issue=row["place_of_issue"],
+                                    country_of_residence=row["country_of_residence"],
+                                    departure_point=row["departure_point"],
+                                    destination_point=row["destination_point"],
+                                    first_airport=row["first_airport"],
+                                    luggage=row["luggage"],
+                                    expiration_date=row["expiration_date"],
+                                    flight=foreign_key,
+                                )
+                            )
+                        Passenger.objects.bulk_create(objects_to_create)
                     case "PNR":
                         first_result = first_result.rename(
                             columns={
@@ -319,6 +372,31 @@ class UploadExcel(APIView):
                                 "Ghi chú": "note",
                             }
                         )
+                        objects_to_create = []
+                        for index, row in first_result.iterrows():
+                            objects_to_create.append(
+                                PassengerPNR(
+                                    booking_code=row["booking_code"],
+                                    booking_date=row["booking_date"],
+                                    ticket_info=row["ticket_info"],
+                                    name=row["name"],
+                                    another_name=row["another_name"],
+                                    flight_itinerary=row["flight_itinerary"],
+                                    address=row["address"],
+                                    phone_email=row["phone_email"],
+                                    contact_info=row["contact_info"],
+                                    number_of_passengers_sharing_booking_code=row[
+                                        "number_of_passengers_sharing_booking_code"
+                                    ],
+                                    booker_code=row["booker_code"],
+                                    number_of_seat=row["number_of_seat"],
+                                    luggage_info=row["luggage_info"],
+                                    note=row["note"],
+                                    flight=foreign_key,
+                                )
+                            )
+                        PassengerPNR.objects.bulk_create(PassengerPNR)
+
         if sheet["second_row"]:
             if sheet["second_nrows"]:
                 second_result = pd.read_excel(
@@ -352,6 +430,23 @@ class UploadExcel(APIView):
                                 "Ngày hết hạn": "expiration_date",
                             }
                         )
+                        objects_to_create = []
+                        for index, row in second_result.iterrows():
+                            objects_to_create.append(
+                                Member(
+                                    name=row["name"],
+                                    sex=row["sex"],
+                                    nationality=row["nationality"],
+                                    date_of_birth=row["date_of_birth"],
+                                    number_of_document=row["number_of_document"],
+                                    type_of_document=row["type_of_document"],
+                                    place_of_issue=row["place_of_issue"],
+                                    expiration_date=row["expiration_date"],
+                                    flight=foreign_key,
+                                )
+                            )
+                        Member.objects.bulk_create(objects_to_create)
+
         if first_result is not None:
             print(first_result)
 
