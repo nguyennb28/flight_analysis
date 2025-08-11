@@ -116,7 +116,7 @@ class Passenger(models.Model):
     expiration_date = models.DateField(null=True)
     flight = models.ForeignKey(
         Flight,
-        on_delete=models.Case,
+        on_delete=models.CASCADE,
         verbose_name="Chuyến bay",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -166,7 +166,7 @@ class PassengerPNR(models.Model):
     )
     flight = models.ForeignKey(
         Flight,
-        on_delete=models.Case,
+        on_delete=models.CASCADE,
         verbose_name="Chuyến bay",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
