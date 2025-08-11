@@ -7,37 +7,48 @@ import Swal from "sweetalert2";
 
 const Flight = () => {
   // State
-  const [files, setFiles] = useState<File[] | null>(null);
+  const [files, setFiles] = useState<FileList | null>(null);
 
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files));
+      setFiles(e.target.files);
     }
   };
 
   const handleUpload = async () => {
     if (files) {
-      files.forEach((file) => {
-        console.log(file);
-      });
-    }
-    try {
-      const response = await axiosInstance.post("");
-      if (response.status == 200) {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => formData.append("files", file));
+      try {
+        const response = await axiosInstance.post("/upload-excel/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (response.status == 201) {
+          Swal.fire({
+            icon: "success",
+            title: "Thông tin",
+            text: "File đã được gửi thành công",
+          });
+          window.location.reload();
+        }
+      } catch (err: any) {
         Swal.fire({
-          icon: "success",
+          icon: "error",
           title: "Thông tin",
-          text: "File đã được gửi thành công"
-        })
+          text: "Không thể gửi file tới server",
+        });
       }
-    } catch (err: any) {
+    } else {
       Swal.fire({
         icon: "error",
         title: "Thông tin",
-        text: "Không thể gửi file tới server",
+        text: "Chưa chọn file",
       });
+      return;
     }
   };
 
