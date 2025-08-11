@@ -3,15 +3,42 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../instance/axiosInstance";
+import Swal from "sweetalert2";
 
 const Flight = () => {
   // State
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [files, setFiles] = useState<File[] | null>(null);
 
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(e.target.files);
+    if (e.target.files) {
+      setFiles(Array.from(e.target.files));
+    }
+  };
+
+  const handleUpload = async () => {
+    if (files) {
+      files.forEach((file) => {
+        console.log(file);
+      });
+    }
+    try {
+      const response = await axiosInstance.post("");
+      if (response.status == 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Thông tin",
+          text: "File đã được gửi thành công"
+        })
+      }
+    } catch (err: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông tin",
+        text: "Không thể gửi file tới server",
+      });
+    }
   };
 
   useEffect(() => {
@@ -39,6 +66,12 @@ const Flight = () => {
               className="form-input"
               onChange={handleFileChange}
             />
+            <button
+              className="border-2 p-3 mt-3 rounded-2xl bg-emerald-700 text-white"
+              onClick={handleUpload}
+            >
+              Tải file excel
+            </button>
           </div>
         </div>
       </div>
