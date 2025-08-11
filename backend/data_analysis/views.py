@@ -16,6 +16,7 @@ from django.db.models import Value, CharField
 from django.db.models.functions import Concat
 from rest_framework.parsers import MultiPartParser, FormParser
 import pandas as pd
+from django.db import transaction
 
 
 # Create your views here.
@@ -154,6 +155,7 @@ class UploadExcel(APIView):
         },
     ]
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         uploaded_files = request.FILES.getlist("files")
 
@@ -167,7 +169,7 @@ class UploadExcel(APIView):
 
         for excel_file in uploaded_files:
             for sheet_name in self.SHEET_NAMES:
-                self.raw_sheet(excel_file, sheet_name)
+                self.bulk_create(excel_file, sheet_name)
 
         return Response(
             {
@@ -218,6 +220,138 @@ class UploadExcel(APIView):
                     skiprows=sheet["second_skiprow"],
                     usecols=sheet["second_row"],
                 )
+        if first_result is not None:
+            print(first_result)
+
+        if second_result is not None:
+            print(second_result)
+
+    def bulk_create(self, file, sheet_name):
+        sheet = None
+        first_result = None
+        second_result = None
+
+        for elem in self.LABEL_NAMES:
+            for detail in elem:
+                if sheet_name == elem[detail]:
+                    sheet = elem
+
+        if sheet["first_row"]:
+            if sheet["first_nrows"]:
+                first_result = pd.read_excel(
+                    file,
+                    sheet_name=sheet["sheet"],
+                    skiprows=sheet["first_skiprow"],
+                    usecols=sheet["first_row"],
+                    nrows=sheet["first_nrows"],
+                    keep_default_na=False,
+                )
+            else:
+                first_result = pd.read_excel(
+                    file,
+                    sheet_name=sheet["sheet"],
+                    skiprows=sheet["first_skiprow"],
+                    usecols=sheet["first_row"],
+                    keep_default_na=False,
+                )
+            if first_result is not None:
+                match sheet_name:
+                    case "Chuyenbay":
+                        first_result = first_result.rename(
+                            columns={
+                                "Hãng vận chuyển": "brand",
+                                "Nhãn hiệu quốc tịch": "nationality_label",
+                                "Số chuyến bay": "flight_number",
+                                "Ngày bay": "flight_date",
+                                "Nơi đi": "departure_point",
+                                "Nơi đến": "destination_point",
+                                "Đường bay": "flight_path",
+                                "Nơi quá cảnh": "trasit_place",
+                            }
+                        )
+                    case "Thongtinchung":
+                        columns_to_drop = ["Through on same flight"]
+                        first_result = first_result.drop(columns_to_drop, axis=1)
+                        first_result = first_result.rename(
+                            columns={
+                                "Số khách": "number_of_guests",
+                                "Nơi đi": "departure_point",
+                                "Nơi xuất cảnh": "place_of_origin",
+                                "Nơi đến": "destination_point",
+                                "Nơi nhập cảnh": "place_of_entry",
+                            }
+                        )
+                    case "Hanhkhach":
+                        first_result = first_result.rename(
+                            columns={
+                                "Số ghế": "number_of_seat",
+                                "Họ và tên": "name",
+                                "Giới tính": "sex",
+                                "Quốc tịch": "nationality",
+                                "Ngày sinh": "date_of_birth",
+                                "Loại giấy tờ": "type_of_document",
+                                "Số giấy tờ": "number_of_document",
+                                "Nơi cấp": "place_of_issue",
+                                "Quốc gia cư trú": "country_of_residence",
+                                "Nơi đi": "departure_point",
+                                "Nơi đến": "destination_point",
+                                "Cảng hàng không đầu tiên": "first_airport",
+                                "Hành lý": "luggage",
+                                "Ngày hết hạn": "expiration_date",
+                            }
+                        )
+                    case "PNR":
+                        first_result = first_result.rename(
+                            columns={
+                                "Mã đặt chỗ": "booking_code",
+                                "Ngày đặt chỗ": "booking_date",
+                                "Thông tin vé": "ticket_info",
+                                "Tên hành khách": "name",
+                                "Tên khác": "another_name",
+                                "Hành trình bay": "flight_itinerary",
+                                "Địa chỉ": "address",
+                                "Điện thoại/Email": "phone_email",
+                                "Thông tin liên hệ": "contact_info",
+                                "Số lượng hành khách chung mã đặt chỗ": "number_of_passengers_sharing_booking_code",
+                                "Mã người đặt chỗ": "booker_code",
+                                "Số ghế": "number_of_seat",
+                                "Thông tin hành lý": "luggage_info",
+                                "Ghi chú": "note",
+                            }
+                        )
+        if sheet["second_row"]:
+            if sheet["second_nrows"]:
+                second_result = pd.read_excel(
+                    file,
+                    sheet_name=sheet["sheet"],
+                    skiprows=sheet["second_skiprow"],
+                    usecols=sheet["second_row"],
+                    nrows=sheet["second_nrows"],
+                    keep_default_na=False,
+                )
+            else:
+                second_result = pd.read_excel(
+                    file,
+                    sheet_name=sheet["sheet"],
+                    skiprows=sheet["second_skiprow"],
+                    usecols=sheet["second_row"],
+                    keep_default_na=False,
+                )
+            if second_result is not None:
+                match sheet_name:
+                    case "Thongtinchung":
+                        second_result = second_result.rename(
+                            columns={
+                                "Họ và tên": "name",
+                                "Giới tính": "sex",
+                                "Quốc tịch": "nationality",
+                                "Ngày sinh": "date_of_birth",
+                                "Số giấy tờ": "number_of_document",
+                                "Loại giấy tờ": "type_of_document",
+                                "Nơi cấp": "place_of_issue",
+                                "Ngày hết hạn": "expiration_date",
+                            }
+                        )
         if first_result is not None:
             print(first_result)
 
