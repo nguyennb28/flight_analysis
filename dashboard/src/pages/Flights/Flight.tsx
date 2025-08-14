@@ -32,8 +32,9 @@ const Flight = () => {
             icon: "success",
             title: "Thông tin",
             text: "File đã được gửi thành công",
+          }).then((result) => {
+            if (result.isConfirmed) window.location.reload();
           });
-          window.location.reload();
         }
       } catch (err: any) {
         Swal.fire({
