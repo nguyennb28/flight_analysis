@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Flight, GeneralInfo, Member, Passenger, PassengerPNR
 import re
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
@@ -53,3 +53,32 @@ class UserSerializer(serializers.ModelSerializer):
         if self.instance and self.instance.phone == value:
             return value
         return value
+
+
+class FlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flight
+        fields = "__all__"
+
+
+class GeneralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeneralInfo
+        fields = "__all__"
+
+
+class MemberSerializer(serializers.ModelSerializer):
+    model = Member
+    fields = "__all__"
+
+
+class PassengerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Passenger
+        fields = "__all__"
+
+
+class PassengerPNRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PassengerPNR
+        fields = "__all__"

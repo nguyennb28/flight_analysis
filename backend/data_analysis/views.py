@@ -1,6 +1,13 @@
 from django.shortcuts import render
 from .models import User
-from .serializers import UserSerializer
+from .serializers import (
+    UserSerializer,
+    FlightSerializer,
+    GeneralSerializer,
+    MemberSerializer,
+    PassengerSerializer,
+    PassengerPNRSerializer,
+)
 from django.db.models import Q
 from .permissions import (
     IsRoleAdmin,
@@ -346,3 +353,27 @@ class UploadExcel(APIView):
 
                 objects = [Member(**rec, flight_id=flight_id) for rec in records]
                 Member.objects.bulk_create(objects)
+
+
+class FlightViewSet(viewsets.ModelViewSet):
+    queryset = Flight.objects.all().order_by("-created_at")
+    serializer_class = FlightSerializer
+    permission_classes = [IsBothOfUs]
+
+    def get_queryset(self):
+        queryset = Flight.objects.all().order_by("-created_at")
+        param = self.request.query_params.get("q")
+
+        if param:
+            queryset = queryset.filter(
+                Q(brand__icontains=param)
+                | Q(nationality_label__icontains=param)
+                | Q(flight_number__icontains=param)
+                | Q(flight_date__icontains=param)
+                | Q(departure_point__icontains=param)
+                | Q(destination_point__icontains=param)
+                | Q(flight_path__icontains=param)
+                | Q(trasit_place__icontains=param)
+                | Q(created_at__icontains=param)
+            )
+        return queryset
