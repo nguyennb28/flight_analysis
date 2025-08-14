@@ -4,10 +4,13 @@ import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../instance/axiosInstance";
 import Swal from "sweetalert2";
+import TableFlight from "./TableFlight";
+import { FlightType } from "../../types/general_type";
 
 const Flight = () => {
   // State
   const [files, setFiles] = useState<FileList | null>(null);
+  const [flights, setFlights] = useState<FlightType[] | null>(null);
 
   const navigate = useNavigate();
 
@@ -53,11 +56,29 @@ const Flight = () => {
     }
   };
 
+  const fetch_flights = async () => {
+    try {
+      const response = await axiosInstance.get("/flight/");
+      if (response.status == 200) {
+        setFlights(response.data.results);
+      }
+    } catch (err: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể lấy dữ liệu chuyến bay từ cơ sở dữ liệu",
+      });
+      throw err;
+    }
+  };
+
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {
       navigate("/signin", { replace: true });
+      return;
     }
+    fetch_flights();
   }, []);
 
   return (
@@ -70,7 +91,6 @@ const Flight = () => {
         </h3>
         <div className="space-y-6">
           <div>
-            <h4>Tải lên file Excel</h4>
             <input
               type="file"
               accept=".xlsx,.xls"
@@ -86,6 +106,10 @@ const Flight = () => {
             </button>
           </div>
         </div>
+      </div>
+      {/* Table */}
+      <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+        {flights && <TableFlight flights={flights} />}
       </div>
     </>
   );

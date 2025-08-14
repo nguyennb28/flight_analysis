@@ -7,3 +7,15 @@ export type User = {
   role: string;
   phone: string | null;
 };
+
+export type FlightType = {
+  id: number;
+  brand: string | null;
+  nationality_label: string | null;
+  flight_number: string | null;
+  flight_date: string | null;
+  departure_point: string | null;
+  destination_point: string | null;
+  flight_path: string | null;
+  trasit_place: string | null;
+};
