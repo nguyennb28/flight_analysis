@@ -165,25 +165,29 @@ class UploadExcel(APIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        uploaded_file = request.FILES.get("files")
-        if not uploaded_file:
+        uploaded_files = request.FILES.getlist("files")
+        if not uploaded_files:
             return Response(
-                {"message": "Vui lòng tải file lên"}, status=status.HTTP_400_BAD_REQUEST
+                {
+                    "message": "Vui lòng tải file lên"
+                },
+                status=status.HTTP_400_BAD_REQUEST
             )
-
-        flight_id = self.create_flight_from_file(uploaded_file)
-        if not flight_id:
-            return Response(
-                {"message": "Không thể xử lý thông tin chuyển bay"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        sheet_to_process = ["Thongtinchung", "Hanhkhach", "PNR"]
-        for sheet_name in sheet_to_process:
-            self.process_data_sheet(uploaded_file, sheet_name, flight_id)
-
+        for elem in uploaded_files:
+            flight_id = self.create_flight_from_file(elem)
+            if not flight_id:
+                return Response(
+                    {
+                        "message": "Không thể xử lý thông tin chuyến bay"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            sheet_to_process = ["Thongtinchung", "Hanhkhach", "PNR"]
+            for sheet_name in sheet_to_process:
+                self.process_data_sheet(elem, sheet_name, flight_id)
         return Response(
-            {"message": "Xử lý file thành công"}, status=status.HTTP_201_CREATED
+            {"message": "Xử lý các file thành công"}, status=status.HTTP_201_CREATED
         )
 
     def create_flight_from_file(self, file):
@@ -356,12 +360,12 @@ class UploadExcel(APIView):
 
 
 class FlightViewSet(viewsets.ModelViewSet):
-    queryset = Flight.objects.all().order_by("-created_at")
+    queryset = Flight.objects.all().order_by("-flight_date")
     serializer_class = FlightSerializer
     permission_classes = [IsBothOfUs]
 
     def get_queryset(self):
-        queryset = Flight.objects.all().order_by("-created_at")
+        queryset = Flight.objects.all().order_by("-flight_date")
         param = self.request.query_params.get("q")
 
         if param:
