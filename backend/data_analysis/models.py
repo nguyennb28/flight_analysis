@@ -144,7 +144,7 @@ class PassengerPNR(models.Model):
         max_length=25, blank=True, null=True, verbose_name="Địa chỉ"
     )
     phone_email = models.CharField(
-        max_length=50, blank=True, null=True, verbose_name="Phone/Email"
+        max_length=100, blank=True, null=True, verbose_name="Phone/Email"
     )
     contact_info = models.TextField(
         max_length=100, blank=True, null=True, verbose_name="Thông tin liên hệ"
