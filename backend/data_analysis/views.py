@@ -175,7 +175,9 @@ class UploadExcel(APIView):
         for sheet_name in sheet_to_process:
             self.process_data_sheet(uploaded_file, sheet_name, flight_id)
 
-        return Response({"message": "Xử lý file thành công"})
+        return Response(
+            {"message": "Xử lý file thành công"}, status=status.HTTP_201_CREATED
+        )
 
     def create_flight_from_file(self, file):
         config = next(
@@ -189,6 +191,7 @@ class UploadExcel(APIView):
             sheet_name="Chuyenbay",
             skiprows=config["first_skiprow"],
             usecols=config["first_row"],
+            keep_default_na=False,
         )
         raw = raw.rename(
             columns={
@@ -201,6 +204,9 @@ class UploadExcel(APIView):
                 "Đường bay": "flight_path",
                 "Nơi quá cảnh": "trasit_place",
             }
+        )
+        raw["flight_date"] = pd.to_datetime(
+            raw["flight_date"], format="%d/%m/%Y", errors="coerce"
         )
 
         flight_data = raw.to_dict("records")[0]
@@ -227,16 +233,72 @@ class UploadExcel(APIView):
 
             match sheet_name:
                 case "Thongtinchung":
+                    columns_to_drop = ["Through on same flight"]
+                    df1 = df1.drop(columns_to_drop, axis=1)
+                    df1 = df1.rename(
+                        columns={
+                            "Số khách": "number_of_guests",
+                            "Nơi đi": "departure_point",
+                            "Nơi xuất cảnh": "place_of_origin",
+                            "Nơi đến": "destination_point",
+                            "Nơi nhập cảnh": "place_of_entry",
+                        }
+                    )
                     records = df1.to_dict("records")
                     objects = [
                         GeneralInfo(**rec, flight_id=flight_id) for rec in records
                     ]
                     GeneralInfo.objects.bulk_create(objects)
                 case "Hanhkhach":
+                    df1 = df1.rename(
+                        columns={
+                            "Số ghế": "number_of_seat",
+                            "Họ và tên": "name",
+                            "Giới tính": "sex",
+                            "Quốc tịch": "nationality",
+                            "Ngày sinh": "date_of_birth",
+                            "Loại giấy tờ": "type_of_document",
+                            "Số giấy tờ": "number_of_document",
+                            "Nơi cấp": "place_of_issue",
+                            "Quốc gia cư trú": "country_of_residence",
+                            "Nơi đi": "departure_point",
+                            "Nơi đến": "destination_point",
+                            "Cảng hàng không đầu tiên": "first_airport",
+                            "Hành lý": "luggage",
+                            "Ngày hết hạn": "expiration_date",
+                        }
+                    )
+                    df1["date_of_birth"] = pd.to_datetime(
+                        df1["date_of_birth"], format="%d/%m/%Y", errors="coerce"
+                    )
+                    df1["expiration_date"] = pd.to_datetime(
+                        df1["expiration_date"], format="%d/%m/%Y", errors="coerce"
+                    )
                     records = df1.to_dict("records")
                     objects = [Passenger(**rec, flight_id=flight_id) for rec in records]
                     Passenger.objects.bulk_create(objects)
                 case "PNR":
+                    df1 = df1.rename(
+                        columns={
+                            "Mã đặt chỗ": "booking_code",
+                            "Ngày đặt chỗ": "booking_date",
+                            "Thông tin vé": "ticket_info",
+                            "Tên hành khách": "name",
+                            "Tên khác": "another_name",
+                            "Hành trình bay": "flight_itinerary",
+                            "Địa chỉ": "address",
+                            "Điện thoại/Email": "phone_email",
+                            "Thông tin liên hệ": "contact_info",
+                            "Số lượng hành khách chung mã đặt chỗ": "number_of_passengers_sharing_booking_code",
+                            "Mã người đặt chỗ": "booker_code",
+                            "Số ghế": "number_of_seat",
+                            "Thông tin hành lý": "luggage_info",
+                            "Ghi chú": "note",
+                        }
+                    )
+                    df1["booking_date"] = pd.to_datetime(
+                        df1["booking_date"], format="%d/%m/%Y %H:%M", errors="coerce"
+                    )
                     records = df1.to_dict("records")
                     objects = [
                         PassengerPNR(**rec, flight_id=flight_id) for rec in records
@@ -250,8 +312,27 @@ class UploadExcel(APIView):
                 skiprows=config.get("second_skiprow"),
                 usecols=config.get("second_row"),
                 nrows=config.get("second_nrows"),
+                keep_default_na=False,
             )
             if sheet_name == "Thongtinchung":
+                df2 = df2.rename(
+                    columns={
+                        "Họ và tên": "name",
+                        "Giới tính": "sex",
+                        "Quốc tịch": "nationality",
+                        "Ngày sinh": "date_of_birth",
+                        "Số giấy tờ": "number_of_document",
+                        "Loại giấy tờ": "type_of_document",
+                        "Nơi cấp": "place_of_issue",
+                        "Ngày hết hạn": "expiration_date",
+                    }
+                )
+                df2["date_of_birth"] = pd.to_datetime(
+                    df2["date_of_birth"], format="%d/%m/%Y", errors="coerce"
+                )
+                df2["expiration_date"] = pd.to_datetime(
+                    df2["expiration_date"], format="%d/%m/%Y", errors="coerce"
+                )
                 records = df2.to_dict("records")
                 objects = [Member(**rec, flight_id=flight_id) for rec in records]
                 Member.objects.bulk_create(objects)
