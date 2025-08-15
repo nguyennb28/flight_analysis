@@ -35,7 +35,11 @@ const navItems: NavItem[] = [
   {
     icon: <FaPlane />,
     name: "Chuyến bay",
-    path: "/flight",
+    // path: "/flight",
+    subItems: [
+      {name: "Thông tin chuyến bay", path: "/flight"},
+      {name: "Thống kê", path: "/flight-report"},
+    ]
   },
   {
     icon: <CalenderIcon />,
