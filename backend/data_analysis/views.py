@@ -3,7 +3,7 @@ from .models import User
 from .serializers import (
     UserSerializer,
     FlightSerializer,
-    GeneralSerializer,
+    GeneralInfoSerializer,
     MemberSerializer,
     PassengerSerializer,
     PassengerPNRSerializer,

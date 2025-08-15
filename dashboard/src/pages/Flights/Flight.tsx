@@ -4,8 +4,9 @@ import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../instance/axiosInstance";
 import Swal from "sweetalert2";
-import TableFlight from "./TableFlight";
+import TableFlight from "./TableFlight2";
 import { FlightType } from "../../types/general_type";
+import { Modal } from "../../components/ui/modal";
 
 const Flight = () => {
   // State
@@ -14,6 +15,29 @@ const Flight = () => {
 
   const navigate = useNavigate();
 
+  // Constant
+  // Display header
+  const headers = [
+    "STT",
+    "Hãng vận chuyển",
+    "Số chuyến bay",
+    "Ngày bay",
+    "Nơi đi",
+    "Nơi đến",
+    "Tính năng",
+  ];
+  // Display attribute
+  const attributes = [
+    "stt",
+    "brand",
+    "flight_number",
+    "flight_date",
+    "departure_point",
+    "destination_point",
+    "features",
+  ];
+
+  // Features
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles(e.target.files);
@@ -72,6 +96,27 @@ const Flight = () => {
     }
   };
 
+  const handleDetail = async (id: string) => {
+    if (id) {
+      try {
+        const response = await axiosInstance.get(`/flight/${id}/`);
+        if (response.status == 200) {
+          console.log(response.data);
+        }
+      } catch (err: any) {
+        console.error(err);
+        throw err;
+      }
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể xem chi tiết thông tin chuyến bay",
+      });
+      return;
+    }
+  };
+
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {
@@ -109,8 +154,14 @@ const Flight = () => {
       </div>
       {/* Table */}
       <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-        {flights && <TableFlight flights={flights} />}
+        <TableFlight
+          headers={headers}
+          flights={flights}
+          attrs={attributes}
+          handleDetail={handleDetail}
+        />
       </div>
+      <div></div>
     </>
   );
 };

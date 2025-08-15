@@ -55,13 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
-class FlightSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Flight
-        fields = "__all__"
-
-
-class GeneralSerializer(serializers.ModelSerializer):
+class GeneralInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralInfo
         fields = "__all__"
@@ -81,4 +75,15 @@ class PassengerSerializer(serializers.ModelSerializer):
 class PassengerPNRSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerPNR
+        fields = "__all__"
+
+
+class FlightSerializer(serializers.ModelSerializer):
+    generalinfo_set = GeneralInfoSerializer(many=True, read_only=True)
+    member_set = MemberSerializer(many=True, read_only=True)
+    passenger_set = PassengerSerializer(many=True, read_only=True)
+    passengerpnr_set = PassengerPNRSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Flight
         fields = "__all__"
