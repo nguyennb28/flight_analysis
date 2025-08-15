@@ -24,7 +24,7 @@ const TableFlight = ({ flights }: Props) => {
       </div>
     );
   } else {
-    console.log(flights[0].brand);
+    // console.log(flights[0].brand);
   }
 
   return (
