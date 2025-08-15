@@ -168,21 +168,16 @@ class UploadExcel(APIView):
         uploaded_files = request.FILES.getlist("files")
         if not uploaded_files:
             return Response(
-                {
-                    "message": "Vui lòng tải file lên"
-                },
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": "Vui lòng tải file lên"}, status=status.HTTP_400_BAD_REQUEST
             )
         for elem in uploaded_files:
             flight_id = self.create_flight_from_file(elem)
             if not flight_id:
                 return Response(
-                    {
-                        "message": "Không thể xử lý thông tin chuyến bay"
-                    },
-                    status=status.HTTP_400_BAD_REQUEST
+                    {"message": "Không thể xử lý thông tin chuyến bay"},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
-            
+
             sheet_to_process = ["Thongtinchung", "Hanhkhach", "PNR"]
             for sheet_name in sheet_to_process:
                 self.process_data_sheet(elem, sheet_name, flight_id)

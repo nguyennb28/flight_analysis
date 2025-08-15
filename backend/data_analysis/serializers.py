@@ -62,8 +62,9 @@ class GeneralInfoSerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    model = Member
-    fields = "__all__"
+    class Meta:
+        model = Member
+        fields = "__all__"
 
 
 class PassengerSerializer(serializers.ModelSerializer):
@@ -79,10 +80,10 @@ class PassengerPNRSerializer(serializers.ModelSerializer):
 
 
 class FlightSerializer(serializers.ModelSerializer):
-    generalinfo_set = GeneralInfoSerializer(many=True, read_only=True)
-    member_set = MemberSerializer(many=True, read_only=True)
-    passenger_set = PassengerSerializer(many=True, read_only=True)
-    passengerpnr_set = PassengerPNRSerializer(many=True, read_only=True)
+    general_infos = GeneralInfoSerializer(many=True, read_only=True)
+    members = MemberSerializer(many=True, read_only=True)
+    passengers = PassengerSerializer(many=True, read_only=True)
+    passenger_pnrs = PassengerPNRSerializer(many=True, read_only=True)
 
     class Meta:
         model = Flight

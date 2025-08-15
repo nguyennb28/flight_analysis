@@ -45,7 +45,10 @@ class GeneralInfo(models.Model):
     destination_point = models.TextField(blank=True, null=True, verbose_name="Nơi đến")
     place_of_entry = models.TextField(blank=True, null=True, verbose_name="Nơi nhập")
     flight = models.ForeignKey(
-        Flight, on_delete=models.CASCADE, verbose_name="Chuyến bay"
+        Flight,
+        on_delete=models.CASCADE,
+        verbose_name="Chuyến bay",
+        related_name="general_infos",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -70,7 +73,10 @@ class Member(models.Model):
     )
     expiration_date = models.DateField(null=True)
     flight = models.ForeignKey(
-        Flight, on_delete=models.CASCADE, verbose_name="Chuyến bay"
+        Flight,
+        on_delete=models.CASCADE,
+        verbose_name="Chuyến bay",
+        related_name="members",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -118,6 +124,7 @@ class Passenger(models.Model):
         Flight,
         on_delete=models.CASCADE,
         verbose_name="Chuyến bay",
+        related_name="passengers",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -168,6 +175,7 @@ class PassengerPNR(models.Model):
         Flight,
         on_delete=models.CASCADE,
         verbose_name="Chuyến bay",
+        related_name="passenger_pnrs",
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
