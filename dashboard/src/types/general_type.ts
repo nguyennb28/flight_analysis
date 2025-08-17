@@ -18,4 +18,8 @@ export type FlightType = {
   destination_point: string | null;
   flight_path: string | null;
   trasit_place: string | null;
+  general_infos: any[] | null;
+  members: any[] | null;
+  passenger_pnrs: any[] | null;
+  passengers: any[] | null;
 };

@@ -12,6 +12,8 @@ const Flight = () => {
   // State
   const [files, setFiles] = useState<FileList | null>(null);
   const [flights, setFlights] = useState<FlightType[] | null>(null);
+  const [isDetail, setIsDetail] = useState<boolean>(false);
+  const [flight, setFlight] = useState<FlightType | null>(null);
 
   const navigate = useNavigate();
 
@@ -101,9 +103,15 @@ const Flight = () => {
       try {
         const response = await axiosInstance.get(`/flight/${id}/`);
         if (response.status == 200) {
-          console.log(response.data);
+          setIsDetail(true);
+          setFlight(response.data);
         }
       } catch (err: any) {
+        Swal.fire({
+          icon: "error",
+          title: "Thông báo",
+          text: "Không thể xem chi tiết thông tin chuyến bay",
+        });
         console.error(err);
         throw err;
       }
@@ -161,7 +169,21 @@ const Flight = () => {
           handleDetail={handleDetail}
         />
       </div>
-      <div></div>
+      <Modal
+        isOpen={isDetail}
+        onClose={() => {
+          setIsDetail(false);
+        }}
+        className="max-w-[80vw] m-4"
+      >
+        {flight ? (
+          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11"></div>
+        ) : (
+          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11 text-red-500 text-2xl font-bold uppercase text-center">
+            Không thể tải dữ liệu !!!
+          </div>
+        )}
+      </Modal>
     </>
   );
 };
