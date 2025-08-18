@@ -175,7 +175,7 @@ const Flight = () => {
         onClose={() => {
           setIsDetail(false);
         }}
-        className="max-w-[80vw] m-4"
+        className="max-w-[100vw] m-4"
       >
         {flight ? (
           <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
