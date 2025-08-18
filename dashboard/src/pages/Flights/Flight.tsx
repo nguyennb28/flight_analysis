@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import TableFlight from "./TableFlight2";
 import { FlightType } from "../../types/general_type";
 import { Modal } from "../../components/ui/modal";
+import FlightDetail from "./FlightDetail";
 
 const Flight = () => {
   // State
@@ -177,7 +178,9 @@ const Flight = () => {
         className="max-w-[80vw] m-4"
       >
         {flight ? (
-          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11"></div>
+          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+            <FlightDetail flight={flight}/>
+          </div>
         ) : (
           <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11 text-red-500 text-2xl font-bold uppercase text-center">
             Không thể tải dữ liệu !!!
