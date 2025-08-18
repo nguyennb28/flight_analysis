@@ -260,6 +260,150 @@ const FlightDetail = ({ flight }: Props) => {
               </p>
             )}
           </div>
+          {/* Passenger */}
+          <div className="font-semibold text-xl italic text-amber-700">
+            Danh sách hành khách:
+            <span className="text-emerald-700">
+              {" "}
+              ({flight.passengers?.length})
+            </span>
+          </div>
+          {/* Passenger header */}
+          <div className="passenger-header grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 border-b border-gray-200 mb-5 pb-5 text-lg">
+            <p className="text-xl font-semibold italic">Số ghế</p>
+            <p className="text-xl font-semibold italic">Tên</p>
+            <p className="text-xl font-semibold italic">Giới tính</p>
+            <p className="text-xl font-semibold italic">Quốc tịch</p>
+            <p className="text-xl font-semibold italic">Ngày sinh</p>
+            <p className="text-xl font-semibold italic">Loại giấy tờ</p>
+            <p className="text-xl font-semibold italic">Số giấy tờ</p>
+            <p className="text-xl font-semibold italic">Nơi cấp</p>
+            <p className="text-xl font-semibold italic">Nơi đi</p>
+            <p className="text-xl font-semibold italic">Nơi đến</p>
+            <p className="text-xl font-semibold italic">Hành lý</p>
+            <p className="text-xl font-semibold italic">Ngày hết hạn</p>
+          </div>
+          {/* Passenger body */}
+          <div className="passenger-body grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 mb-5 pb-5 text-lg">
+            {flight.passengers ? (
+              flight.passengers.map((passenger, idx) => (
+                <>
+                  <p className="mb-2">
+                    {passenger.number_of_seat ? (
+                      passenger.number_of_seat
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.name ? (
+                      passenger.name
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.sex ? (
+                      passenger.sex
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.nationality ? (
+                      passenger.nationality
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.date_of_birth ? (
+                      passenger.date_of_birth
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.type_of_document ? (
+                      passenger.type_of_document
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.number_of_document ? (
+                      passenger.number_of_document
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.place_of_issue ? (
+                      passenger.place_of_issue
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.departure_point ? (
+                      passenger.departure_point
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.destination_point ? (
+                      passenger.destination_point
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2 whitespace-normal break-words">
+                    {passenger.luggage ? (
+                      passenger.luggage
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {passenger.expiration_date ? (
+                      passenger.expiration_date
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                </>
+              ))
+            ) : (
+              <p className="text-red-400 font-bold text-xl">
+                Không có thông tin
+              </p>
+            )}
+          </div>
         </>
       )}
     </>
