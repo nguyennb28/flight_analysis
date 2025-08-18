@@ -20,6 +20,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Flight from "./pages/Flights/Flight";
+import FlightReport from "./pages/Flights/FlightReport";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/blank" element={<Blank />} />
               <Route path="/flight" element={<Flight />}/>
+              <Route path="/flight-report" element={<FlightReport />}/>
 
               {/* Forms */}
               <Route path="/form-elements" element={<FormElements />} />
