@@ -178,7 +178,7 @@ const Flight = () => {
         className="max-w-[100vw] m-4"
       >
         {flight ? (
-          <div className="relative w-full max-h-[700px] p-4 overflow-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+          <div className="relative w-full max-h-[850px] p-4 overflow-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
             <FlightDetail flight={flight} />
           </div>
         ) : (
