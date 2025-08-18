@@ -162,7 +162,8 @@ const FlightDetail = ({ flight }: Props) => {
           </div>
           {/* Member */}
           <div className="font-semibold text-xl italic text-amber-700">
-            Danh sách thành viên tổ bay
+            Danh sách thành viên tổ bay:
+            <span className="text-emerald-700"> {flight.members?.length}</span>
           </div>
           {/* Member header */}
           <div className="member-header grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 border-b border-gray-200 mb-5 pb-5 text-lg">
@@ -265,7 +266,7 @@ const FlightDetail = ({ flight }: Props) => {
             Danh sách hành khách:
             <span className="text-emerald-700">
               {" "}
-              ({flight.passengers?.length})
+              {flight.passengers?.length}
             </span>
           </div>
           {/* Passenger header */}
