@@ -405,6 +405,141 @@ const FlightDetail = ({ flight }: Props) => {
               </p>
             )}
           </div>
+
+          {/* PassengerPNR */}
+          <div className="font-semibold text-xl italic text-amber-700">
+            Danh sách PNR:
+            <span className="text-emerald-700">
+              {" "}
+              {flight.passenger_pnrs?.length}
+            </span>
+          </div>
+          {/* PassengerPNR header */}
+          <div className="passengerpnr-header grid grid-cols-1 md:grid-cols-4 lg:grid-cols-11 border-b border-gray-200 mb-5 pb-5 text-lg">
+            <p className="text-xl font-semibold italic">Mã đặt chỗ</p>
+            <p className="text-xl font-semibold italic">Ngày đặt chỗ</p>
+            <p className="text-xl font-semibold italic">Thông tin vé</p>
+            <p className="text-xl font-semibold italic">Tên hành khách</p>
+            <p className="text-xl font-semibold italic">Tên khác</p>
+            <p className="text-xl font-semibold italic">Hành trình bay</p>
+            <p className="text-xl font-semibold italic">Địa chỉ</p>
+            <p className="text-xl font-semibold italic">Điện thoại</p>
+            <p className="text-xl font-semibold italic">Thông tin liên hệ</p>
+            <p className="text-xl font-semibold italic">Số lượng</p>
+            <p className="text-xl font-semibold italic">Mã người đặt chỗ</p>
+          </div>
+          {/* PassengerPNR body */}
+          <div className="passenger-body grid grid-cols-1 md:grid-cols-5 lg:grid-cols-11 mb-5 pb-5 text-lg">
+            {flight.passenger_pnrs ? (
+              flight.passenger_pnrs.map((pnr, idx) => (
+                <>
+                  <p className="mb-2">
+                    {pnr.booking_code ? (
+                      pnr.booking_code
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.booking_date ? (
+                      pnr.booking_date
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.ticket_info ? (
+                      pnr.ticket_info
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2 whitespace-normal break-words">
+                    {pnr.name ? (
+                      pnr.name
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.another_name ? (
+                      pnr.another_name
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.flight_itinerary ? (
+                      pnr.flight_itinerary
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.address ? (
+                      pnr.address
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2 whitespace-normal break-words">
+                    {pnr.phone_email ? (
+                      pnr.phone_email
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2 whitespace-normal break-words">
+                    {pnr.contact_info ? (
+                      pnr.contact_info
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.number_of_passengers_sharing_booking_code ? (
+                      pnr.number_of_passengers_sharing_booking_code
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                  <p className="mb-2">
+                    {pnr.booker_code ? (
+                      pnr.booker_code
+                    ) : (
+                      <span className="text-red-400 italic">
+                        Không có thông tin
+                      </span>
+                    )}
+                  </p>
+                </>
+              ))
+            ) : (
+              <p className="text-red-400 font-bold text-xl">
+                Không có thông tin
+              </p>
+            )}
+          </div>
         </>
       )}
     </>
