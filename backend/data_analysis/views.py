@@ -25,6 +25,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 import pandas as pd
 from django.db import transaction
 from .models import Flight, GeneralInfo, Member, Passenger, PassengerPNR
+from datetime import datetime, timedelta
 
 
 # Create your views here.
@@ -376,3 +377,7 @@ class FlightViewSet(viewsets.ModelViewSet):
                 | Q(created_at__icontains=param)
             )
         return queryset
+
+
+# class ReportView(APIView):
+    
