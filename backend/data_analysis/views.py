@@ -356,9 +356,35 @@ class UploadExcel(APIView):
 
     def get(self, request):
         # df = pd.DataFrame(list(Passenger.objects.all()))
-        df = pd.DataFrame(list(Passenger.objects.all().values("name", "date_of_birth", "number_of_document")))
-        
-        return Response({"data": df}, status=status.HTTP_200_OK)
+        # df = pd.DataFrame(list(Passenger.objects.all().values()))
+        passengers = Passenger.objects.all().values(
+            "name",
+            "sex",
+            "nationality",
+            "date_of_birth",
+            "type_of_document",
+            "place_of_issue",
+        )
+        df = pd.DataFrame(list(passengers))
+        duplicate_passengers = (
+            df.groupby(
+                [
+                "name",
+                "sex",
+                "nationality",
+                "date_of_birth",
+                "type_of_document",
+                "place_of_issue",
+                ]
+            )
+            .size()
+            .reset_index(name="travel_times")
+        )
+        frequent_numbers = duplicate_passengers[
+            duplicate_passengers["travel_times"] >= 2
+        ]
+
+        return Response({"data": frequent_numbers}, status=status.HTTP_200_OK)
 
 
 class FlightViewSet(viewsets.ModelViewSet):

@@ -9,7 +9,8 @@ const FlightReport = () => {
 
   const getReport = async () => {
     try {
-      // const response = await axiosInstance.
+      const response = await axiosInstance.get("/upload-excel/")
+      console.log(response);
     } catch(err: any) {
       console.error(err)
     }
@@ -20,6 +21,8 @@ const FlightReport = () => {
     if (!access) {
       navigate("/signin", { replace: true });
     }
+
+    getReport();
   }, []);
 
   return (
