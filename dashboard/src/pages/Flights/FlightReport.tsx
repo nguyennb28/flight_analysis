@@ -2,10 +2,19 @@ import { useEffect } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
+import axiosInstance from "../../instance/axiosInstance";
 
 const FlightReport = () => {
   const navigate = useNavigate();
 
+  const getReport = async () => {
+    try {
+      // const response = await axiosInstance.
+    } catch(err: any) {
+      console.error(err)
+    }
+  }
+  
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {

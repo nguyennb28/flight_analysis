@@ -354,6 +354,12 @@ class UploadExcel(APIView):
                 objects = [Member(**rec, flight_id=flight_id) for rec in records]
                 Member.objects.bulk_create(objects)
 
+    def get(self, request):
+        # df = pd.DataFrame(list(Passenger.objects.all()))
+        df = pd.DataFrame(list(Passenger.objects.all().values("name", "date_of_birth", "number_of_document")))
+        
+        return Response({"data": df}, status=status.HTTP_200_OK)
+
 
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = Flight.objects.all().order_by("-flight_date")
@@ -380,4 +386,3 @@ class FlightViewSet(viewsets.ModelViewSet):
 
 
 # class ReportView(APIView):
-    
