@@ -355,8 +355,6 @@ class UploadExcel(APIView):
                 Member.objects.bulk_create(objects)
 
     def get(self, request):
-        # df = pd.DataFrame(list(Passenger.objects.all()))
-        # df = pd.DataFrame(list(Passenger.objects.all().values()))
         passengers = Passenger.objects.all().values(
             "name",
             "sex",
