@@ -363,16 +363,17 @@ class UploadExcel(APIView):
             "type_of_document",
             "place_of_issue",
         )
+        print(list(passengers))
         df = pd.DataFrame(list(passengers))
         duplicate_passengers = (
             df.groupby(
                 [
-                "name",
-                "sex",
-                "nationality",
-                "date_of_birth",
-                "type_of_document",
-                "place_of_issue",
+                    "name",
+                    "sex",
+                    "nationality",
+                    "date_of_birth",
+                    "type_of_document",
+                    "place_of_issue",
                 ]
             )
             .size()
