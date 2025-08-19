@@ -1,7 +1,18 @@
+import { useEffect } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
+import { useNavigate } from "react-router";
 
 const FlightReport = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
+
   return (
     <>
       <PageMeta title="Thống kê" description="Thống kê" />
