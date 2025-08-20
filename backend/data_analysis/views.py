@@ -375,11 +375,17 @@ class UploadExcel(APIView):
             number_of_documents.append(row["number_of_document"])
 
         if number_of_documents:
-            print(len(number_of_documents))
+            records = (
+                Passenger.objects.select_related("flight")
+                .filter(number_of_document__in=number_of_documents)
+                .order_by("name")
+                .values("name", "number_of_document","nationality", "departure_point", "destination_point","flight__flight_date")
+            )
 
         return Response(
             {
-                "data": frequent_numbers,
+                "data": records,
+                "report": frequent_numbers,
                 # "second_data": result,
             },
             status=status.HTTP_200_OK,

@@ -9,6 +9,7 @@ import TableGeneric from "../../components/tables/TableGenerics/TableGeneric";
 const FlightReport = () => {
   // State
   const [reports, setReports] = useState<any[] | null>(null);
+  const [records, setRecords] = useState<any[] | null>(null);
 
   const navigate = useNavigate();
 
@@ -17,7 +18,8 @@ const FlightReport = () => {
       const response = await axiosInstance.get("/upload-excel/");
       if (response.status == 200) {
         // setReports(response.data.second_data);
-        setReports(response.data.data);
+        setReports(response.data.report);
+        setRecords(response.data.data);
       }
     } catch (err: any) {
       console.error(err);
@@ -25,25 +27,24 @@ const FlightReport = () => {
   };
 
   const headers = [
-    "Số lần đi",
+    // "Số lần đi",
     "Tên",
     "Quốc tịch",
     "Ngày sinh",
     "Điểm đi",
     "Điểm đến",
-    "Chuyến bay",
     "Số giấy tờ",
+    "Ngày bay",
   ];
 
   const attributes = [
-    "travel_times",
     "name",
     "nationality",
     "date_of_birth",
     "departure_point",
     "destination_point",
-    "flight_id",
     "number_of_document",
+    "flight__flight_date"
   ];
 
   useEffect(() => {
@@ -65,11 +66,12 @@ const FlightReport = () => {
         </h3>
       </div>
       <div className="space-y-6">
-        <ComponentCard title="Basic Table 1">
+        <ComponentCard title="Bảng chi tiết">
           {reports && (
             <TableGeneric
               headers={headers}
-              tableData={reports}
+              reports={reports}
+              records={records}
               attributes={attributes}
             />
           )}
