@@ -355,35 +355,35 @@ class UploadExcel(APIView):
                 Member.objects.bulk_create(objects)
 
     def get(self, request):
-        passengers = Passenger.objects.all().values(
-            "name",
-            "sex",
-            "nationality",
-            "date_of_birth",
-            "type_of_document",
-            "place_of_issue",
-        )
-        print(list(passengers))
+        passengers = Passenger.objects.all().values()
         df = pd.DataFrame(list(passengers))
         duplicate_passengers = (
             df.groupby(
                 [
                     "name",
-                    "sex",
-                    "nationality",
-                    "date_of_birth",
-                    "type_of_document",
-                    "place_of_issue",
+                    "number_of_document",
                 ]
             )
             .size()
             .reset_index(name="travel_times")
         )
         frequent_numbers = duplicate_passengers[
-            duplicate_passengers["travel_times"] >= 2
+            duplicate_passengers["travel_times"] >= 3  # 56
         ]
+        number_of_documents = []
+        for idx, row in frequent_numbers.iterrows():
+            number_of_documents.append(row["number_of_document"])
 
-        return Response({"data": frequent_numbers}, status=status.HTTP_200_OK)
+        if number_of_documents:
+            print(len(number_of_documents))
+
+        return Response(
+            {
+                "data": frequent_numbers,
+                # "second_data": result,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class FlightViewSet(viewsets.ModelViewSet):
