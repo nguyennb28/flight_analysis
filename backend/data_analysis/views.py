@@ -354,6 +354,7 @@ class UploadExcel(APIView):
                 objects = [Member(**rec, flight_id=flight_id) for rec in records]
                 Member.objects.bulk_create(objects)
 
+
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = Flight.objects.all().order_by("-flight_date")
     serializer_class = FlightSerializer
@@ -424,4 +425,26 @@ class ReportFlightGeneral(APIView):
                 "destination_point",
                 "flight__flight_date",
             )
+        )
+
+
+class ReportFlightDate(APIView):
+    def get(self, request):
+        startDate = request.query_params.get("startDate")
+        endDate = request.query_params.get("endDate")
+
+        if not startDate and not endDate:
+            return Response(
+                {"msg": "Không có thời gian cụ thể"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        queryset = Flight.objects.all()
+
+        # queryset
+        
+        return Response(
+            {
+                "msg": "Hello World",
+            },
+            status=status.HTTP_200_OK,
         )

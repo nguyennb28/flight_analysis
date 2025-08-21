@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
@@ -11,22 +11,12 @@ const FlightReport = () => {
   // State
   const [reports, setReports] = useState<any[] | null>(null);
   const [records, setRecords] = useState<any[] | null>(null);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const getReport = async () => {
-    try {
-      const response = await axiosInstance.get("/report-general/");
-      if (response.status == 200) {
-        // setReports(response.data.second_data);
-        setReports(response.data.report);
-        setRecords(response.data.data);
-      }
-    } catch (err: any) {
-      console.error(err);
-    }
-  };
-
+  // Constant
   const passenger_headers = [
     "STT",
     "Tên",
@@ -51,14 +41,52 @@ const FlightReport = () => {
   const report_headers = ["Số lần bay", "Tên", "Số giấy tờ"];
   const report_attributes = ["travel_times", "name", "number_of_document"];
 
+  // Features
+  const getReport = async () => {
+    if (!startDate && !endDate) {
+      try {
+        const response = await axiosInstance.get(`/report-flight-general/`);
+        if (response.status == 200) {
+          setReports(response.data.report);
+          setRecords(response.data.data);
+        }
+      } catch (err: any) {
+        console.error(err);
+      }
+    }
+    if (startDate && endDate) {
+      try {
+        const response = await axiosInstance.get(
+          `/report-flight-date/?startDate=${startDate}&endDate=${endDate}`
+        );
+        if (response.status == 200) {
+          setReports(response.data.report);
+          setRecords(response.data.data);
+        }
+      } catch (err: any) {
+        console.error(err);
+      }
+    }
+  };
+
+  const handleDate = (flag: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (flag == "start") {
+      setStartDate(e.currentTarget.value);
+    } else {
+      setEndDate(e.currentTarget.value);
+    }
+  };
+
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {
       navigate("/signin", { replace: true });
     }
-
-    getReport();
   }, []);
+
+  useEffect(() => {
+    getReport();
+  }, [startDate, endDate]);
 
   return (
     <>
@@ -68,31 +96,56 @@ const FlightReport = () => {
         <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
           Thống kê
         </h3>
-        <div className="features grid grid-cols-1 md:grid-cols-3">
+        <div className="features flex justify-items-between">
+          <div className="flex flex-col">
+            <label className="text-lg">Ngày bắt đầu</label>
+            <input
+              type="date"
+              className="border-2 p-3 rounded-xl border-gray-500"
+              onChange={(e) => handleDate("start", e)}
+            />
+          </div>
+          <div className="flex flex-col ml-4">
+            <label className="text-lg">Ngày kết thúc</label>
+            <input
+              type="date"
+              className="border-2 p-3 rounded-xl border-gray-500"
+              onChange={(e) => handleDate("end", e)}
+            />
+          </div>
         </div>
       </div>
       {/* Table Report */}
-      <div className="space-y-6 mt-4">
-        <ComponentCard title="Bảng báo cáo chung">
-          <TableReport
-            headers={report_headers}
-            records={reports}
-            attributes={report_attributes}
-          />
-        </ComponentCard>
-      </div>
-      {/* Table Passenger */}
-      <div className="space-y-6 mt-4">
-        <ComponentCard title="Bảng chi tiết chung">
-          {records && (
-            <TablePassenger
-              headers={passenger_headers}
-              records={records}
-              attributes={passenger_attributes}
+      {reports && (
+        <div className="space-y-6 mt-4">
+          <ComponentCard title="Bảng báo cáo chung">
+            <TableReport
+              headers={report_headers}
+              records={reports}
+              attributes={report_attributes}
             />
-          )}
-        </ComponentCard>
-      </div>
+          </ComponentCard>
+        </div>
+      )}
+      {/* Table Passenger */}
+      {records && (
+        <div className="space-y-6 mt-4">
+          <ComponentCard title="Bảng chi tiết chung">
+            {records && (
+              <TablePassenger
+                headers={passenger_headers}
+                records={records}
+                attributes={passenger_attributes}
+              />
+            )}
+          </ComponentCard>
+        </div>
+      )}
+      {!reports && !records && (
+        <div className="text-2xl text-red-400 text-center">
+          Không có dữ liệu
+        </div>
+      )}
     </>
   );
 };

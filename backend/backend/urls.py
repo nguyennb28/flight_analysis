@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from data_analysis.views import UploadExcel, ReportFlightGeneral
+from data_analysis.views import UploadExcel, ReportFlightGeneral, ReportFlightDate
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -27,5 +27,12 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("data_analysis.urls")),
     path("api/upload-excel/", UploadExcel.as_view(), name="upload-excel"),
-    path("api/report-general/", ReportFlightGeneral.as_view(), name="report-general"),
+    path(
+        "api/report-flight-general/",
+        ReportFlightGeneral.as_view(),
+        name="report-flight-general",
+    ),
+    path(
+        "api/report-flight-date/", ReportFlightDate.as_view(), name="report-flight-date"
+    ),
 ]
