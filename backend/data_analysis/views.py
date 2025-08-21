@@ -375,20 +375,31 @@ class UploadExcel(APIView):
             number_of_documents.append(row["number_of_document"])
 
         if number_of_documents:
-            records = (
-                Passenger.objects.select_related("flight")
-                .filter(number_of_document__in=number_of_documents)
-                .order_by("name")
-                .values("name", "number_of_document","nationality", "departure_point", "destination_point","flight__flight_date")
-            )
+            records = self.get_passengers_by_number_of_document(number_of_documents)
 
         return Response(
             {
                 "data": records,
-                "report": frequent_numbers,
+                "report": frequent_numbers.to_dict(orient="records"),
                 # "second_data": result,
             },
             status=status.HTTP_200_OK,
+        )
+
+    def get_passengers_by_number_of_document(self, number_of_documents):
+        return (
+            Passenger.objects.select_related("flight")
+            .filter(number_of_document__in=number_of_documents)
+            .order_by("name")
+            .values(
+                "name",
+                "number_of_document",
+                "nationality",
+                "date_of_birth",
+                "departure_point",
+                "destination_point",
+                "flight__flight_date",
+            )
         )
 
 
@@ -414,6 +425,3 @@ class FlightViewSet(viewsets.ModelViewSet):
                 | Q(created_at__icontains=param)
             )
         return queryset
-
-
-# class ReportView(APIView):

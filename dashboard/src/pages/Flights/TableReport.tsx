@@ -12,7 +12,8 @@ interface Props {
   attributes: string[] | null;
 }
 
-const TablePassenger = ({ headers, records, attributes }: Props) => {
+// Define the table data using the interface
+const TableReport = ({ headers, records, attributes }: Props) => {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -36,16 +37,15 @@ const TablePassenger = ({ headers, records, attributes }: Props) => {
           {/* Table Body */}
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {records &&
-              records.map((record, index) => (
-                <TableRow key={index}>
+              records.map((record, idx) => (
+                <TableRow key={idx}>
                   {attributes &&
-                    attributes.map((attr, idx) => (
-                      <TableCell key={idx} className="pl-3 text-start">
-                        {attr == "stt" ? (
-                          <div className="text-xl">{index + 1}</div>
-                        ) : (
-                          <div className="text-xl">{record[attr]}</div>
-                        )}
+                    attributes.map((attr, i) => (
+                      <TableCell
+                        key={i}
+                        className="px-5 py-4 sm:px-6 text-start"
+                      >
+                        <div className="text-xl">{record[attr]}</div>
                       </TableCell>
                     ))}
                 </TableRow>
@@ -57,4 +57,4 @@ const TablePassenger = ({ headers, records, attributes }: Props) => {
   );
 };
 
-export default TablePassenger;
+export default TableReport;

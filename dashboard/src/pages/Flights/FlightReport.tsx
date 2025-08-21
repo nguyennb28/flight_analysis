@@ -4,7 +4,8 @@ import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../instance/axiosInstance";
 import ComponentCard from "../../components/common/ComponentCard";
-import TableGeneric from "./TablePassenger";
+import TablePassenger from "./TablePassenger";
+import TableReport from "./TableReport";
 
 const FlightReport = () => {
   // State
@@ -26,8 +27,8 @@ const FlightReport = () => {
     }
   };
 
-  const headers = [
-    // "Số lần đi",
+  const passenger_headers = [
+    "STT",
     "Tên",
     "Quốc tịch",
     "Ngày sinh",
@@ -36,8 +37,7 @@ const FlightReport = () => {
     "Số giấy tờ",
     "Ngày bay",
   ];
-
-  const attributes = [
+  const passenger_attributes = [
     "stt",
     "name",
     "nationality",
@@ -45,8 +45,11 @@ const FlightReport = () => {
     "departure_point",
     "destination_point",
     "number_of_document",
-    "flight__flight_date"
+    "flight__flight_date",
   ];
+
+  const report_headers = ["Số lần bay", "Tên", "Số giấy tờ"];
+  const report_attributes = ["travel_times", "name", "number_of_document"];
 
   useEffect(() => {
     const access = localStorage.getItem("access");
@@ -66,13 +69,24 @@ const FlightReport = () => {
           Thống kê
         </h3>
       </div>
+      {/* Table Report */}
       <div className="space-y-6 mt-4">
-        <ComponentCard title="Bảng chi tiết">
+        <ComponentCard title="Bảng báo cáo chung">
+          <TableReport
+            headers={report_headers}
+            records={reports}
+            attributes={report_attributes}
+          />
+        </ComponentCard>
+      </div>
+      {/* Table Passenger */}
+      <div className="space-y-6 mt-4">
+        <ComponentCard title="Bảng chi tiết chung">
           {records && (
-            <TableGeneric
-              headers={headers}
+            <TablePassenger
+              headers={passenger_headers}
               records={records}
-              attributes={attributes}
+              attributes={passenger_attributes}
             />
           )}
         </ComponentCard>
