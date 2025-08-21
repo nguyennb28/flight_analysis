@@ -40,7 +40,7 @@ const TablePassenger = ({ headers, records, attributes }: Props) => {
                 <TableRow key={index}>
                   {attributes &&
                     attributes.map((attr, idx) => (
-                      <TableCell key={idx} className="pl-3 text-start">
+                      <TableCell key={idx} className="px-5 py-4 sm:px-6 text-start">
                         {attr == "stt" ? (
                           <div className="text-xl">{index + 1}</div>
                         ) : (
