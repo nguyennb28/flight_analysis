@@ -4,7 +4,7 @@ import PageMeta from "../../components/common/PageMeta";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../instance/axiosInstance";
 import ComponentCard from "../../components/common/ComponentCard";
-import TableGeneric from "../../components/tables/TableGenerics/TableGeneric";
+import TableGeneric from "./TablePassenger";
 
 const FlightReport = () => {
   // State
@@ -38,6 +38,7 @@ const FlightReport = () => {
   ];
 
   const attributes = [
+    "stt",
     "name",
     "nationality",
     "date_of_birth",
@@ -65,12 +66,11 @@ const FlightReport = () => {
           Thống kê
         </h3>
       </div>
-      <div className="space-y-6">
+      <div className="space-y-6 mt-4">
         <ComponentCard title="Bảng chi tiết">
-          {reports && (
+          {records && (
             <TableGeneric
               headers={headers}
-              reports={reports}
               records={records}
               attributes={attributes}
             />
