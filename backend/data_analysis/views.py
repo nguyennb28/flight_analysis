@@ -354,6 +354,31 @@ class UploadExcel(APIView):
                 objects = [Member(**rec, flight_id=flight_id) for rec in records]
                 Member.objects.bulk_create(objects)
 
+class FlightViewSet(viewsets.ModelViewSet):
+    queryset = Flight.objects.all().order_by("-flight_date")
+    serializer_class = FlightSerializer
+    permission_classes = [IsBothOfUs]
+
+    def get_queryset(self):
+        queryset = Flight.objects.all().order_by("-flight_date")
+        param = self.request.query_params.get("q")
+
+        if param:
+            queryset = queryset.filter(
+                Q(brand__icontains=param)
+                | Q(nationality_label__icontains=param)
+                | Q(flight_number__icontains=param)
+                | Q(flight_date__icontains=param)
+                | Q(departure_point__icontains=param)
+                | Q(destination_point__icontains=param)
+                | Q(flight_path__icontains=param)
+                | Q(trasit_place__icontains=param)
+                | Q(created_at__icontains=param)
+            )
+        return queryset
+
+
+class ReportFlightGeneral(APIView):
     def get(self, request):
         passengers = Passenger.objects.all().values()
         df = pd.DataFrame(list(passengers))
@@ -381,7 +406,6 @@ class UploadExcel(APIView):
             {
                 "data": records,
                 "report": frequent_numbers.to_dict(orient="records"),
-                # "second_data": result,
             },
             status=status.HTTP_200_OK,
         )
@@ -401,27 +425,3 @@ class UploadExcel(APIView):
                 "flight__flight_date",
             )
         )
-
-
-class FlightViewSet(viewsets.ModelViewSet):
-    queryset = Flight.objects.all().order_by("-flight_date")
-    serializer_class = FlightSerializer
-    permission_classes = [IsBothOfUs]
-
-    def get_queryset(self):
-        queryset = Flight.objects.all().order_by("-flight_date")
-        param = self.request.query_params.get("q")
-
-        if param:
-            queryset = queryset.filter(
-                Q(brand__icontains=param)
-                | Q(nationality_label__icontains=param)
-                | Q(flight_number__icontains=param)
-                | Q(flight_date__icontains=param)
-                | Q(departure_point__icontains=param)
-                | Q(destination_point__icontains=param)
-                | Q(flight_path__icontains=param)
-                | Q(trasit_place__icontains=param)
-                | Q(created_at__icontains=param)
-            )
-        return queryset

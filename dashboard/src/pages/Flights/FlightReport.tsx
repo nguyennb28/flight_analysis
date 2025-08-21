@@ -16,7 +16,7 @@ const FlightReport = () => {
 
   const getReport = async () => {
     try {
-      const response = await axiosInstance.get("/upload-excel/");
+      const response = await axiosInstance.get("/report-general/");
       if (response.status == 200) {
         // setReports(response.data.second_data);
         setReports(response.data.report);
@@ -68,6 +68,8 @@ const FlightReport = () => {
         <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
           Thống kê
         </h3>
+        <div className="features grid grid-cols-1 md:grid-cols-3">
+        </div>
       </div>
       {/* Table Report */}
       <div className="space-y-6 mt-4">
