@@ -79,9 +79,6 @@ const FlightReport = () => {
         console.error(err);
         setReports(null);
         setRecords(null);
-      } finally {
-        setStartDate("");
-        setEndDate("");
       }
     }
   };

@@ -448,10 +448,6 @@ class ReportFlightDate(APIView):
 
         queryset = Flight.objects.all()
         try:
-
-            # queryset = queryset.filter(
-            #     flight_date__range=[start_date_formatted, end_date_formatted]
-            # )
             queryset = queryset.filter(flight_date__gte=start_date_formatted)
             queryset = queryset.filter(flight_date__lt=end_date_formatted)
         except ValueError:
@@ -496,6 +492,7 @@ class ReportFlightDate(APIView):
         for idx, row in frequent_numbers.iterrows():
             number_of_documents.append(row["number_of_document"])
 
+        records = None
         if number_of_documents:
             records = self.get_passengers_by_number_of_document(number_of_documents)
 
