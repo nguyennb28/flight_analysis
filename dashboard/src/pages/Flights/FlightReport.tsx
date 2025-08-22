@@ -7,6 +7,7 @@ import ComponentCard from "../../components/common/ComponentCard";
 import TablePassenger from "./TablePassenger";
 import TableReport from "./TableReport";
 import Swal from "sweetalert2";
+import { IoReload } from "react-icons/io5";
 
 const FlightReport = () => {
   // State
@@ -111,6 +112,10 @@ const FlightReport = () => {
     }
   };
 
+  const refresh = () => {
+    window.location.reload();
+  };
+
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (!access) {
@@ -130,24 +135,36 @@ const FlightReport = () => {
         <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
           Thống kê
         </h3>
-        <div className="features flex justify-items-between">
-          <div className="flex flex-col">
-            <label className="text-lg">Ngày bắt đầu</label>
-            <input
-              type="date"
-              className="border-2 p-3 rounded-xl border-gray-500"
-              onChange={(e) => handleDate("start", e)}
-              value={startDate}
-            />
+        <div className="features flex flex-col md:flex-row md:items-end justify-start  md:justify-between">
+          <div className="flex flex-col md:flex-row container-1">
+            <div className="flex flex-col">
+              <label className="text-lg">Ngày bắt đầu</label>
+              <input
+                type="date"
+                className="border-2 p-3 rounded-xl border-gray-500"
+                onChange={(e) => handleDate("start", e)}
+                value={startDate}
+              />
+            </div>
+            <div className="flex flex-col md:ml-4">
+              <label className="text-lg">Ngày kết thúc</label>
+              <input
+                type="date"
+                className="border-2 p-3 rounded-xl border-gray-500"
+                onChange={(e) => handleDate("end", e)}
+                value={endDate}
+              />
+            </div>
           </div>
-          <div className="flex flex-col ml-4">
-            <label className="text-lg">Ngày kết thúc</label>
-            <input
-              type="date"
-              className="border-2 p-3 rounded-xl border-gray-500"
-              onChange={(e) => handleDate("end", e)}
-              value={endDate}
-            />
+          <div>
+            <button
+              type="button"
+              className="shadow-2xl bg-gray-500 p-5 rounded-3xl"
+              title="Reset"
+              onClick={refresh}
+            >
+              <IoReload className="text-white" size={30} />
+            </button>
           </div>
         </div>
       </div>
