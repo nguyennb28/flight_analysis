@@ -430,21 +430,77 @@ class ReportFlightGeneral(APIView):
 
 class ReportFlightDate(APIView):
     def get(self, request):
-        startDate = request.query_params.get("startDate")
-        endDate = request.query_params.get("endDate")
+        start_date = request.query_params.get("startDate")
+        end_date = request.query_params.get("endDate")
 
-        if not startDate and not endDate:
+        if not start_date and not end_date:
             return Response(
                 {"msg": "Không có thời gian cụ thể"}, status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         queryset = Flight.objects.all()
 
-        # queryset
-        
+        try:
+            start_date_formatted = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date_formatted = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+            queryset = queryset.filter(
+                flight_date__range=[start_date_formatted, end_date_formatted]
+            )
+        except ValueError:
+            return Response(
+                {"msg": "Định dạng ngày không hợp lệ. Vui lòng dùng YYYY-MM-DD"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        flight_ids = queryset.values("id")
+        passengers = list(Passenger.objects.filter(flight_id__in=flight_ids).values())
+
+        results = self.report(passengers)
+        print(results)
+
         return Response(
-            {
-                "msg": "Hello World",
-            },
+            {"data": results["data"], "report": results["report"]},
             status=status.HTTP_200_OK,
+        )
+
+    def report(self, obj):
+        df = pd.DataFrame(obj)
+        duplicate_passengers = (
+            df.groupby(
+                [
+                    "name",
+                    "number_of_document",
+                ]
+            )
+            .size()
+            .reset_index(name="travel_times")
+        )
+
+        frequent_numbers = duplicate_passengers[
+            duplicate_passengers["travel_times"] >= 3
+        ]
+
+        number_of_documents = []
+        for idx, row in frequent_numbers.iterrows():
+            number_of_documents.append(row["number_of_document"])
+
+        if number_of_documents:
+            records = self.get_passengers_by_number_of_document(number_of_documents)
+
+        return {"data": records, "report": frequent_numbers.to_dict(orient="records")}
+
+    def get_passengers_by_number_of_document(self, number_of_documents):
+        return (
+            Passenger.objects.select_related("flight")
+            .filter(number_of_document__in=number_of_documents)
+            .order_by("name")
+            .values(
+                "name",
+                "number_of_document",
+                "nationality",
+                "date_of_birth",
+                "departure_point",
+                "destination_point",
+                "flight__flight_date",
+            )
         )
