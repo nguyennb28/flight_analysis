@@ -86,7 +86,7 @@ const FlightReport = () => {
           }
         }
       } catch (err: any) {
-        console.error(err);
+        console.error(err.response.data.msg);
         setReports(null);
         setRecords(null);
       }
