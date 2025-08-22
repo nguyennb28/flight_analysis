@@ -49,7 +49,7 @@ const FlightReport = () => {
         const response = await axiosInstance.get(`/report-flight-general/`);
         if (response.status == 200) {
           setReports(response.data.report);
-          setRecords(response.data.data);
+          setRecords(response.data.record);
         }
       } catch (err: any) {
         console.error(err);
@@ -72,8 +72,18 @@ const FlightReport = () => {
           `/report-flight-date/?startDate=${startDate}&endDate=${endDate}`
         );
         if (response.status == 200) {
-          setReports(response.data.report);
-          setRecords(response.data.data);
+          const report = response.data.report;
+          const record = response.data.record;
+          if (report == null || report.length == 0) {
+            setReports(null);
+          } else {
+            setReports(report);
+          }
+          if (record == null || record.length == 0) {
+            setRecords(null);
+          } else {
+            setRecords(record);
+          }
         }
       } catch (err: any) {
         console.error(err);

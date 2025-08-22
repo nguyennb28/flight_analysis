@@ -405,7 +405,7 @@ class ReportFlightGeneral(APIView):
 
         return Response(
             {
-                "data": records,
+                "record": records,
                 "report": frequent_numbers.to_dict(orient="records"),
             },
             status=status.HTTP_200_OK,
@@ -467,7 +467,7 @@ class ReportFlightDate(APIView):
         print(results)
 
         return Response(
-            {"data": results["data"], "report": results["report"]},
+            {"record": results["record"], "report": results["report"]},
             status=status.HTTP_200_OK,
         )
 
@@ -496,7 +496,7 @@ class ReportFlightDate(APIView):
         if number_of_documents:
             records = self.get_passengers_by_number_of_document(number_of_documents)
 
-        return {"data": records, "report": frequent_numbers.to_dict(orient="records")}
+        return {"record": records, "report": frequent_numbers.to_dict(orient="records")}
 
     def get_passengers_by_number_of_document(self, number_of_documents):
         return (
