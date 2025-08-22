@@ -6,6 +6,7 @@ import axiosInstance from "../../instance/axiosInstance";
 import ComponentCard from "../../components/common/ComponentCard";
 import TablePassenger from "./TablePassenger";
 import TableReport from "./TableReport";
+import Swal from "sweetalert2";
 
 const FlightReport = () => {
   // State
@@ -55,6 +56,17 @@ const FlightReport = () => {
       }
     }
     if (startDate && endDate) {
+      const compare = compareDates(startDate, endDate);
+      if (compare) {
+        setStartDate("");
+        setEndDate("");
+        Swal.fire({
+          icon: "error",
+          title: "Thông báo",
+          text: "Ngày kết thúc phải luôn lớn hơn ngày bắt đầu",
+        });
+        return;
+      }
       try {
         const response = await axiosInstance.get(
           `/report-flight-date/?startDate=${startDate}&endDate=${endDate}`
@@ -65,6 +77,11 @@ const FlightReport = () => {
         }
       } catch (err: any) {
         console.error(err);
+        setReports(null);
+        setRecords(null);
+      } finally {
+        setStartDate("");
+        setEndDate("");
       }
     }
   };
@@ -74,6 +91,16 @@ const FlightReport = () => {
       setStartDate(e.currentTarget.value);
     } else {
       setEndDate(e.currentTarget.value);
+    }
+  };
+
+  const compareDates = (start: string, end: string) => {
+    if (start && end) {
+      const date1 = new Date(start);
+      const date2 = new Date(end);
+      if (date2 < date1) {
+        return true;
+      }
     }
   };
 
@@ -103,6 +130,7 @@ const FlightReport = () => {
               type="date"
               className="border-2 p-3 rounded-xl border-gray-500"
               onChange={(e) => handleDate("start", e)}
+              value={startDate}
             />
           </div>
           <div className="flex flex-col ml-4">
@@ -111,6 +139,7 @@ const FlightReport = () => {
               type="date"
               className="border-2 p-3 rounded-xl border-gray-500"
               onChange={(e) => handleDate("end", e)}
+              value={endDate}
             />
           </div>
         </div>

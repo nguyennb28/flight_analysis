@@ -438,21 +438,33 @@ class ReportFlightDate(APIView):
                 {"msg": "Không có thời gian cụ thể"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        queryset = Flight.objects.all()
-
-        try:
-            start_date_formatted = datetime.strptime(start_date, "%Y-%m-%d").date()
-            end_date_formatted = datetime.strptime(end_date, "%Y-%m-%d").date()
-
-            queryset = queryset.filter(
-                flight_date__range=[start_date_formatted, end_date_formatted]
+        start_date_formatted = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date_formatted = datetime.strptime(end_date, "%Y-%m-%d").date()
+        if end_date_formatted < start_date_formatted:
+            return Response(
+                {"msg": "Ngày kết thúc phải lớn hơn ngày bắt đầu!"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
+
+        queryset = Flight.objects.all()
+        try:
+
+            # queryset = queryset.filter(
+            #     flight_date__range=[start_date_formatted, end_date_formatted]
+            # )
+            queryset = queryset.filter(flight_date__gte=start_date_formatted)
+            queryset = queryset.filter(flight_date__lt=end_date_formatted)
         except ValueError:
             return Response(
                 {"msg": "Định dạng ngày không hợp lệ. Vui lòng dùng YYYY-MM-DD"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         flight_ids = queryset.values("id")
+        if not flight_ids:
+            return Response(
+                {"msg": "Không tìm thấy chuyến bay nào"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         passengers = list(Passenger.objects.filter(flight_id__in=flight_ids).values())
 
         results = self.report(passengers)
