@@ -109,7 +109,7 @@ const FlightDetail = ({ flight }: Props) => {
           {/* General info body */}
           <div className="general-infos-body grid grid-cols-1 md:grid-cols-5 mb-5 pb-5 text-lg">
             {flight.general_infos
-              ? flight.general_infos.map((item, idx) => (
+              ? flight.general_infos.map((item) => (
                   <>
                     <p>
                       {item.number_of_guests ? (
@@ -179,7 +179,7 @@ const FlightDetail = ({ flight }: Props) => {
           {/* Member body */}
           <div className="general-infos-body grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 mb-5 pb-5 text-lg">
             {flight.members ? (
-              flight.members.map((member, index) => (
+              flight.members.map((member) => (
                 <>
                   <p className="mb-2">
                     {member.name ? (
@@ -287,7 +287,7 @@ const FlightDetail = ({ flight }: Props) => {
           {/* Passenger body */}
           <div className="passenger-body grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 mb-5 pb-5 text-lg">
             {flight.passengers ? (
-              flight.passengers.map((passenger, idx) => (
+              flight.passengers.map((passenger) => (
                 <>
                   <p className="mb-2">
                     {passenger.number_of_seat ? (
@@ -431,7 +431,7 @@ const FlightDetail = ({ flight }: Props) => {
           {/* PassengerPNR body */}
           <div className="passenger-body grid grid-cols-1 md:grid-cols-5 lg:grid-cols-11 mb-5 pb-5 text-lg">
             {flight.passenger_pnrs ? (
-              flight.passenger_pnrs.map((pnr, idx) => (
+              flight.passenger_pnrs.map((pnr) => (
                 <>
                   <p className="mb-2">
                     {pnr.booking_code ? (

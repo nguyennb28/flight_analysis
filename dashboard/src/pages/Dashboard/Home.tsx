@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 export default function Home() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {

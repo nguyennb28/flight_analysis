@@ -1,8 +1,6 @@
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
 import { useForm } from "react-hook-form";
 import { User } from "../../types/general_type";
 
@@ -11,7 +9,6 @@ interface Props {
   username: string;
   first_name: string | null;
   last_name: string | null;
-  full_name: string | null;
   role: string | null;
   phone: string | null;
   onSubmit: (data: User) => void;
@@ -22,7 +19,6 @@ const UserInfoCard = ({
   username,
   first_name,
   last_name,
-  full_name,
   role,
   phone,
   onSubmit,

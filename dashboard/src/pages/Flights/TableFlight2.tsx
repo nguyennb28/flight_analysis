@@ -1,4 +1,4 @@
-import { MdDelete, MdRemoveRedEye } from "react-icons/md";
+import { MdRemoveRedEye } from "react-icons/md";
 import { FlightType } from "../../types/general_type";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 
 interface Props {
   headers: any[] | null;
-  flights: FlightType[] | null;
+  flights: any[] | FlightType[] | null;
   attrs: any[] | null;
   handleDetail: (id: any) => void;
 }

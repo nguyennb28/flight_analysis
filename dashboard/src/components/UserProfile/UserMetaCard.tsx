@@ -1,4 +1,3 @@
-import { useModal } from "../../hooks/useModal";
 interface Props {
   id: number;
   username: string;
@@ -33,6 +32,11 @@ const UserMetaCard = ({
               <h5 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
                 {username}
               </h5>
+              <p className="invisible">{id}</p>
+              <p className="invisible">{first_name}</p>
+              <p className="invisible">{last_name}</p>
+              <p className="invisible">{role}</p>
+              <p className="invisible">{phone}</p>
             </div>
           </div>
         </div>

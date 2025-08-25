@@ -8,7 +8,7 @@ import {
 
 interface Props {
   headers: string[] | null;
-  records: string[] | null;
+  records: any[] | null;
   attributes: string[] | null;
 }
 
