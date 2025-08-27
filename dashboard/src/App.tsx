@@ -21,6 +21,7 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Flight from "./pages/Flights/Flight";
 import FlightReport from "./pages/Flights/FlightReport";
+import Account from "./components/account/Account";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
 
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/blank" element={<Blank />} />
               <Route path="/flight" element={<Flight />}/>
