@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Modal } from "../ui/modal";
+
 interface Props {
   id: number;
   username: string;
@@ -17,6 +20,8 @@ const UserMetaCard = ({
   role,
   phone,
 }: Props) => {
+  const [isCreate, setIsCreate] = useState<boolean>(false);
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -39,8 +44,28 @@ const UserMetaCard = ({
               <p className="invisible">{phone}</p>
             </div>
           </div>
+          <div>
+            <button
+              type="button"
+              className="border-1 bg-gray-400 rounded-2xl shadow-2xl p-5"
+              onClick={() => setIsCreate(true)}
+            >
+              Tạo tài khoản
+            </button>
+          </div>
         </div>
       </div>
+      <Modal
+        isOpen={isCreate}
+        onClose={() => setIsCreate(false)}
+        className="max-w-[700px] m-4"
+      >
+        <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+          <div>
+            <h4 className="text-2xl uppercase font-bold">Tạo tài khoản </h4>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };
