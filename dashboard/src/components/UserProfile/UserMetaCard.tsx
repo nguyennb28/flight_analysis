@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal } from "../ui/modal";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Props {
   id: number;
@@ -11,6 +12,15 @@ interface Props {
   phone: string | null;
 }
 
+type Inputs = {
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  role: string;
+};
+
 const UserMetaCard = ({
   id,
   username,
@@ -21,6 +31,15 @@ const UserMetaCard = ({
   phone,
 }: Props) => {
   const [isCreate, setIsCreate] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  
 
   return (
     <>

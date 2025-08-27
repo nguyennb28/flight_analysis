@@ -21,7 +21,7 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Flight from "./pages/Flights/Flight";
 import FlightReport from "./pages/Flights/FlightReport";
-import Account from "./components/account/Account";
+import Account from "./pages/Account/Account";
 
 export default function App() {
   return (
