@@ -3,6 +3,7 @@ import { Modal } from "../../components/ui/modal";
 import { useForm, SubmitHandler } from "react-hook-form";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import Button from "../../components/ui/button/Button";
 
 type Inputs = {
   username: string;
@@ -18,11 +19,16 @@ const Account = () => {
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
 
+  // Constant
+  const ROLES = [
+    { value: "user", label: "User" },
+    { value: "admin", label: "Admin" },
+  ];
+
   // Form
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -57,7 +63,132 @@ const Account = () => {
           <div>
             <h4 className="text-2xl uppercase font-bold">Tạo tài khoản </h4>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}></form>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+              <div className="mt-7">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                  {/* Username */}
+                  <div>
+                    <label className="label-form">Tên tài khoản</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập tên tài khoản"
+                      {...register("username", {
+                        required: "Nhập tên tài khoản",
+                      })}
+                    />
+                    {errors.username && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.username.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Password */}
+                  <div>
+                    <label className="label-form">Mật khẩu</label>
+                    <input
+                      type="password"
+                      className="form-input"
+                      placeholder="Nhập mật khẩu"
+                      {...register("password")}
+                    />
+                  </div>
+                  {/* First name */}
+                  <div>
+                    <label className="label-form">Họ</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập họ"
+                      {...register("first_name", {
+                        required: "Nhập họ",
+                      })}
+                    />
+                    {errors.first_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.first_name.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Last name */}
+                  <div>
+                    <label className="label-form">Tên</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập tên"
+                      {...register("last_name", {
+                        required: "Nhập tên",
+                      })}
+                    />
+                    {errors.last_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.last_name.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Phone */}
+                  <div>
+                    <label className="label-form">Số điện thoại</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập số điện thoại"
+                      {...register("phone", {
+                        required: "Nhập số điện thoại",
+                        pattern: {
+                          value: /^[0-9]+$/,
+                          message: "Số điện thoại chỉ được chứa số",
+                        },
+                        minLength: {
+                          value: 9,
+                          message: "Số điện thoại tối thiểu 9 chữ số",
+                        },
+                        maxLength: {
+                          value: 15,
+                          message: "Số điện thoại tối đa 15 chữ số",
+                        },
+                      })}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Role */}
+                  <div>
+                    <label className="label-form">Phân quyền</label>
+                    <select {...register("role")} className="form-input">
+                      <option value="">--- Chọn ---</option>
+                      {ROLES.map((item, index) => (
+                        <option value={item.value} key={index}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {/*  */}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-2 mt-6 md:justify-end">
+                <button
+                  type="submit"
+                  className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
+                >Lưu</button>
+                <Button
+                  size="md"
+                  variant="outline"
+                  onClick={() => {
+                    setIsCreate(false);
+                  }}
+                >
+                  Đóng
+                </Button>
+              </div>
+            </div>
+          </form>
         </div>
       </Modal>
       {/* Update */}
