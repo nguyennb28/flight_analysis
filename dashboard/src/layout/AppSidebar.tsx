@@ -41,11 +41,11 @@ const navItems: NavItem[] = [
       { name: "Thống kê", path: "/flight-report" },
     ],
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Calendar",
+  //   path: "/calendar",
+  // },
   {
     icon: <UserCircleIcon />,
     name: "Tài khoản",

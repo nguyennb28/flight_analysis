@@ -4,6 +4,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
+import Swal from "sweetalert2";
+import axiosInstance from "../../instance/axiosInstance";
 
 type Inputs = {
   username: string;
@@ -30,9 +32,75 @@ const Account = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+    reset,
+  } = useForm<Inputs>({
+    defaultValues: {
+      username: "",
+      password: "",
+      first_name: "",
+      last_name: "",
+      phone: "",
+      role: "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    createAccount(data);
+  };
+
+  const createAccount = async (data: Inputs) => {
+    if (data) {
+      try {
+        const response = await axiosInstance.post(`/users/`, {
+          ...data,
+        });
+        if (response.status == 201 || response.status == 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Thông báo",
+            text: "Cập nhật thành công",
+            timer: 1000,
+          });
+          window.location.reload();
+        }
+      } catch (err: any) {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Thông báo",
+          text: "Có lỗi trong quá trình tạo tài khoản",
+        });
+      }
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Hãy cung cấp đầy đủ thông tin để tạo tài khoản",
+      });
+      return;
+    }
+  };
+
+  const closeModalCreate = () => {
+    setIsCreate(false);
+    refreshState();
+  };
+
+  const closeModalUpdate = () => {
+    setIsUpdate(true);
+    refreshState();
+  };
+
+  const refreshState = () => {
+    reset({
+      username: "",
+      password: "",
+      first_name: "",
+      last_name: "",
+      phone: "",
+      role: "",
+    });
+  };
 
   return (
     <>
@@ -176,14 +244,10 @@ const Account = () => {
                 <button
                   type="submit"
                   className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
-                >Lưu</button>
-                <Button
-                  size="md"
-                  variant="outline"
-                  onClick={() => {
-                    setIsCreate(false);
-                  }}
                 >
+                  Lưu
+                </button>
+                <Button size="md" variant="outline" onClick={closeModalCreate}>
                   Đóng
                 </Button>
               </div>
