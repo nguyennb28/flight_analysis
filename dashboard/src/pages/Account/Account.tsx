@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import axiosInstance from "../../instance/axiosInstance";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import TableAccount from "./TableAccount";
 
 type Inputs = {
   username: string;
@@ -22,11 +23,21 @@ const Account = () => {
   // State
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [users, setUsers] = useState<any[] | null>(null);
 
   // Constant
   const ROLES = [
     { value: "user", label: "User" },
     { value: "admin", label: "Admin" },
+  ];
+  const headers = [
+    "Lựa chọn",
+    "STT",
+    "Tài khoản",
+    "Họ và tên",
+    "Số điện thoại",
+    "Quyền hạn",
+    "Tính năng",
   ];
 
   // Navigate
@@ -89,6 +100,17 @@ const Account = () => {
     }
   };
 
+  const getUsers = async () => {
+    try {
+      const response = await axiosInstance.get(`/users/`);
+      if (response.status == 200) {
+        setUsers(response.data.results);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   const closeModalCreate = () => {
     setIsCreate(false);
     refreshState();
@@ -116,6 +138,7 @@ const Account = () => {
       navigate("/signin", { replace: true });
       return;
     }
+    getUsers();
   }, []);
 
   useEffect(() => {
@@ -298,6 +321,15 @@ const Account = () => {
           </div>
         </div>
       </Modal>
+      <div className="rounded-2xl mt-5 border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+        {users ? (
+          <TableAccount headers={headers} users={users} />
+        ) : (
+          <div>
+            <h4 className="text-red-500 text-xl">Không có dữ liệu</h4>
+          </div>
+        )}
+      </div>
     </>
   );
 };
