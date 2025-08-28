@@ -24,6 +24,7 @@ const Account = () => {
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [users, setUsers] = useState<any[] | null>(null);
+  const [account, setAccount] = useState<any>(null);
 
   // Constant
   const ROLES = [
@@ -130,6 +131,30 @@ const Account = () => {
       phone: "",
       role: "",
     });
+  };
+
+  const featureDetail = async (id: string | number) => {
+    if (!id) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không có id tài khoản",
+      });
+      return;
+    }
+    try {
+      const response = await axiosInstance.get(`/users/${id}/`);
+      if (response.status == 200 || response.status == 201) {
+        setAccount(response.data);
+      }
+    } catch (err: any) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không xem được chi tiết tài khoản",
+      });
+    }
   };
 
   useEffect(() => {
@@ -323,7 +348,12 @@ const Account = () => {
       </Modal>
       <div className="rounded-2xl mt-5 border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         {users ? (
-          <TableAccount headers={headers} users={users} />
+          <TableAccount
+            headers={headers}
+            users={users}
+            onDelete={() => {}}
+            onEdit={() => {}}
+          />
         ) : (
           <div>
             <h4 className="text-red-500 text-xl">Không có dữ liệu</h4>

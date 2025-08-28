@@ -22,10 +22,12 @@ type User = {
 interface Props {
   headers: string[];
   users: User[] | null;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 // Define the table data using the interface
-const TableAccount = ({ headers, users }: Props) => {
+const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -112,15 +114,10 @@ const TableAccount = ({ headers, users }: Props) => {
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <div className="flex items-center gap-3">{record.role}</div>
                   </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start grid grid-cols-1 md:grid-cols-3">
+                  <TableCell className="px-5 py-4 sm:px-6 text-start grid grid-cols-1 md:grid-cols-2">
                     <div>
                       <button>
                         <MdDelete size={30} className="text-red-800" />
-                      </button>
-                    </div>
-                    <div>
-                      <button>
-                        <FaEye size={30} className="text-emerald-800" />
                       </button>
                     </div>
                     <div>
