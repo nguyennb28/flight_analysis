@@ -6,6 +6,8 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
 import Swal from "sweetalert2";
 import axiosInstance from "../../instance/axiosInstance";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 type Inputs = {
   username: string;
@@ -26,6 +28,12 @@ const Account = () => {
     { value: "user", label: "User" },
     { value: "admin", label: "Admin" },
   ];
+
+  // Navigate
+  const navigate = useNavigate();
+
+  // Context
+  const { user } = useAuth();
 
   // Form
   const {
@@ -101,6 +109,27 @@ const Account = () => {
       role: "",
     });
   };
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      if (user.role !== "admin") {
+        Swal.fire({
+          icon: "error",
+          title: "Thông báo",
+          text: "Không được sử dụng tính năng này",
+        });
+        navigate("/", { replace: true });
+      }
+    }
+  }, [user]);
 
   return (
     <>

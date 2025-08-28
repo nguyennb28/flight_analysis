@@ -3,16 +3,9 @@ import { Link, useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
 import {
-  BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
@@ -52,7 +45,12 @@ const navItems: NavItem[] = [
     // path: "/profile",
     subItems: [
       { name: "Thông tin cá nhân", path: "/profile", pro: true },
-      { name: "Quản lý các tài khoản", path: "/account", pro: true, new: true },
+      {
+        name: "Quản lý các tài khoản",
+        path: "/account",
+        pro: true,
+        new: true,
+      },
     ],
   },
   // {
