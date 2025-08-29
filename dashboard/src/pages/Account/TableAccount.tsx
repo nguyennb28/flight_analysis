@@ -6,7 +6,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { MdDelete } from "react-icons/md";
-import { FaEye, FaEdit } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 type User = {
