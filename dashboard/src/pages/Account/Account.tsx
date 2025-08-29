@@ -9,6 +9,7 @@ import axiosInstance from "../../instance/axiosInstance";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import TableAccount from "./TableAccount";
+import { User } from "../../types/general_type";
 
 type Inputs = {
   username: string;
@@ -24,7 +25,7 @@ const Account = () => {
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [users, setUsers] = useState<any[] | null>(null);
-  const [account, setAccount] = useState<any>(null);
+  const [account, setAccount] = useState<User | any>(null);
 
   // Constant
   const ROLES = [
@@ -52,6 +53,7 @@ const Account = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<Inputs>({
     defaultValues: {
       username: "",
@@ -117,13 +119,23 @@ const Account = () => {
     }
   };
 
+  const openModalCreate = () => {
+    setAccount(null);
+    setIsCreate(true);
+  };
+
   const closeModalCreate = () => {
     setIsCreate(false);
     refreshState();
   };
 
-  const closeModalUpdate = () => {
+  const openModalUpdate = (id: string | number) => {
     setIsUpdate(true);
+    getUser(id);
+  };
+
+  const closeModalUpdate = () => {
+    setIsUpdate(false);
     refreshState();
   };
 
@@ -136,9 +148,10 @@ const Account = () => {
       phone: "",
       role: "",
     });
+    setAccount(null);
   };
 
-  const featureDelete = async (id: string | number) => {
+  const checkIdUser = (id: string | number) => {
     if (!id) {
       Swal.fire({
         icon: "error",
@@ -147,6 +160,28 @@ const Account = () => {
       });
       return;
     }
+    return;
+  };
+
+  const getUser = async (id: string | number) => {
+    checkIdUser(id);
+    try {
+      const response = await axiosInstance.get(`/users/${id}/`);
+      if (response.status == 200 || response.status == 201) {
+        setAccount(response.data);
+      }
+    } catch (err: any) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không lấy được thông tin tài khoản đã chỉ định",
+      });
+    }
+  };
+
+  const featureDelete = async (id: string | number) => {
+    checkIdUser(id);
     try {
       const response = await axiosInstance.delete(`/users/${id}/`);
       if (response.status == 204) {
@@ -194,6 +229,15 @@ const Account = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!account) {
+    } else {
+      setValue("username", account["username"]);
+      setValue("first_name", account["first_name"]);
+      setValue("first_name", account["first_name"]);
+    }
+  }, [account]);
+
   return (
     <>
       <PageMeta title="Tài khoản" description="Tài khoản" />
@@ -206,7 +250,7 @@ const Account = () => {
           <div>
             <button
               className="border-2 p-3 mt-3 rounded-2xl bg-emerald-700 text-white"
-              onClick={() => setIsCreate(true)}
+              onClick={openModalCreate}
             >
               Tạo tài khoản
             </button>
@@ -363,7 +407,7 @@ const Account = () => {
       {/* Update */}
       <Modal
         isOpen={isUpdate}
-        onClose={() => setIsUpdate(false)}
+        onClose={closeModalUpdate}
         className="max-w-[700px] m-4"
       >
         <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
@@ -372,6 +416,7 @@ const Account = () => {
               Cập nhật tài khoản{" "}
             </h4>
           </div>
+          {/* <form action=""></form> */}
         </div>
       </Modal>
       <div className="rounded-2xl mt-5 border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
@@ -380,7 +425,7 @@ const Account = () => {
             headers={headers}
             users={users}
             onDelete={featureDelete}
-            onEdit={() => {}}
+            onEdit={openModalUpdate}
           />
         ) : (
           <div>

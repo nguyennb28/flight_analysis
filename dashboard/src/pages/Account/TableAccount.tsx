@@ -112,7 +112,7 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
                       </button>
                     </div>
                     <div>
-                      <button>
+                      <button onClick={() => onEdit(record.id)}>
                         <FaEdit size={30} className="text-zinc-400" />
                       </button>
                     </div>
