@@ -12,6 +12,7 @@ import TableAccount from "./TableAccount";
 import { User } from "../../types/general_type";
 
 type Inputs = {
+  id?: string | number;
   username: string;
   password: string;
   first_name: string;
@@ -66,7 +67,11 @@ const Account = () => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    createAccount(data);
+    if (data.id) {
+      updateAccount(data);
+    } else {
+      createAccount(data);
+    }
   };
 
   const createAccount = async (data: Inputs) => {
@@ -106,6 +111,58 @@ const Account = () => {
       });
       return;
     }
+  };
+
+  const updateAccount = async (data: Inputs) => {
+    if (!data) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không có dữ liệu để cập nhập thông tin tài khoản",
+      });
+      return;
+    }
+    let checkedData = checkValue(data);
+    const id = checkedData.id;
+    checkedData = removeSpecifiedElement(checkedData, "id");
+    try {
+      const response = await axiosInstance.patch(`/users/${id}/`, {
+        ...checkedData,
+      });
+      if (response.status == 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Thông báo",
+          text: "Cập nhật tài khoản thành công",
+        }).then((result) => {
+          closeModalUpdate();
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Có lỗi trong quá trình cập nhật tài khoản",
+      });
+    }
+  };
+
+  const checkValue = (data: Inputs | any) => {
+    Object.keys(data).map((elem) => {
+      if (!data[elem]) {
+        delete data[elem];
+      }
+    });
+    return data;
+  };
+
+  const removeSpecifiedElement = (data: Inputs | any, key: string) => {
+    delete data[key];
+    return data;
   };
 
   const getUsers = async () => {
@@ -232,9 +289,12 @@ const Account = () => {
   useEffect(() => {
     if (!account) {
     } else {
+      setValue("id", account["id"]);
       setValue("username", account["username"]);
       setValue("first_name", account["first_name"]);
-      setValue("first_name", account["first_name"]);
+      setValue("last_name", account["last_name"]);
+      setValue("phone", account["phone"]);
+      setValue("role", account["role"]);
     }
   }, [account]);
 
@@ -416,7 +476,143 @@ const Account = () => {
               Cập nhật tài khoản{" "}
             </h4>
           </div>
-          {/* <form action=""></form> */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+              <div className="mt-7">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                  {/* Id */}
+                  <input type="hidden" {...register("id")} />
+                  {/* Username */}
+                  <div>
+                    <label className="label-form">Tên tài khoản</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập tên tài khoản"
+                      {...register("username", {
+                        required: "Nhập tên tài khoản",
+                      })}
+                    />
+                    {errors.username && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.username.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Password */}
+                  <div>
+                    <label className="label-form">Mật khẩu</label>
+                    <input
+                      type="password"
+                      className="form-input"
+                      placeholder="Nhập mật khẩu"
+                      {...register("password", { required: false })}
+                    />
+                    {errors.password && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* First name */}
+                  <div>
+                    <label className="label-form">Họ</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập họ"
+                      {...register("first_name", {
+                        required: "Nhập họ",
+                      })}
+                    />
+                    {errors.first_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.first_name.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Last name */}
+                  <div>
+                    <label className="label-form">Tên</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập tên"
+                      {...register("last_name", {
+                        required: "Nhập tên",
+                      })}
+                    />
+                    {errors.last_name && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.last_name.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Phone */}
+                  <div>
+                    <label className="label-form">Số điện thoại</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Nhập số điện thoại"
+                      {...register("phone", {
+                        required: "Nhập số điện thoại",
+                        pattern: {
+                          value: /^[0-9]+$/,
+                          message: "Số điện thoại chỉ được chứa số",
+                        },
+                        minLength: {
+                          value: 9,
+                          message: "Số điện thoại tối thiểu 9 chữ số",
+                        },
+                        maxLength: {
+                          value: 15,
+                          message: "Số điện thoại tối đa 15 chữ số",
+                        },
+                      })}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+                  {/* Role */}
+                  <div>
+                    <label className="label-form">Phân quyền</label>
+                    <select
+                      {...register("role", { required: true })}
+                      className="form-input"
+                    >
+                      <option value="">--- Chọn ---</option>
+                      {ROLES.map((item, index) => (
+                        <option value={item.value} key={index}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.role && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        Vui lòng chọn phân quyền
+                      </p>
+                    )}
+                  </div>
+                  {/*  */}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-2 mt-6 md:justify-end">
+                <button
+                  type="submit"
+                  className="px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 rounded-lg transition bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300"
+                >
+                  Lưu
+                </button>
+                <Button size="md" variant="outline" onClick={closeModalUpdate}>
+                  Đóng
+                </Button>
+              </div>
+            </div>
+          </form>
         </div>
       </Modal>
       <div className="rounded-2xl mt-5 border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
