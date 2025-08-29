@@ -54,15 +54,17 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
         <Table>
           {/* Table Header */}
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-            {headers.map((header, idx) => (
-              <TableCell
-                key={idx}
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-lg dark:text-gray-400"
-              >
-                {header}
-              </TableCell>
-            ))}
+            <TableRow>
+              {headers.map((header, idx) => (
+                <TableCell
+                  key={idx}
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-lg dark:text-gray-400"
+                >
+                  {header}
+                </TableCell>
+              ))}
+            </TableRow>
           </TableHeader>
 
           {/* Table Body */}
