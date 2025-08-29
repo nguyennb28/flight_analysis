@@ -22,7 +22,7 @@ export default function Home() {
         description="This is React.js Ecommerce Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-        <h3 className="text-lg font-semibold text-gray-800 dark:bg-white/[0.03] lg:p-6">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white dark:bg-white/[0.03] lg:p-6">
           Trang chủ
         </h3>
       </div>
