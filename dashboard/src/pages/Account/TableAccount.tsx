@@ -83,20 +83,20 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
               users.map((record, index) => (
                 <TableRow key={index}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">{index}</div>
+                    <div className="flex items-center gap-3 dark:text-white">{index}</div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 dark:text-white">
                       {record.username}
                     </div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 dark:text-white">
                       {record.full_name}
                     </div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 dark:text-white">
                       {record.phone ? (
                         record.phone
                       ) : (
@@ -107,12 +107,12 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
                     </div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">{record.role}</div>
+                    <div className="flex items-center gap-3 dark:text-white">{record.role}</div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start grid grid-cols-1 md:grid-cols-2">
                     <div>
                       <button>
-                        <MdDelete size={30} className="text-red-800" />
+                        <MdDelete size={30} className="text-red-800 dark:text-red-400" />
                       </button>
                     </div>
                     <div>
