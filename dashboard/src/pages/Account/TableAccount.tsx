@@ -83,11 +83,6 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
               users.map((record, index) => (
                 <TableRow key={index}>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div>
-                      <input type="checkbox" value={record.id} />
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <div className="flex items-center gap-3">{index}</div>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">

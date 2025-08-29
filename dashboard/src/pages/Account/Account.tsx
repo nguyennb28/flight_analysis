@@ -32,7 +32,6 @@ const Account = () => {
     { value: "admin", label: "Admin" },
   ];
   const headers = [
-    "Lựa chọn",
     "STT",
     "Tài khoản",
     "Họ và tên",
@@ -75,16 +74,22 @@ const Account = () => {
           ...data,
         });
         if (response.status == 201 || response.status == 200) {
+          setIsCreate(false);
           Swal.fire({
             icon: "success",
             title: "Thông báo",
             text: "Cập nhật thành công",
-            timer: 1000,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            } else {
+              window.location.reload();
+            }
           });
-          window.location.reload();
         }
       } catch (err: any) {
         console.error(err);
+        setIsCreate(false);
         Swal.fire({
           icon: "error",
           title: "Thông báo",
@@ -236,8 +241,13 @@ const Account = () => {
                       type="password"
                       className="form-input"
                       placeholder="Nhập mật khẩu"
-                      {...register("password")}
+                      {...register("password", { required: "Nhập mật khẩu" })}
                     />
+                    {errors.password && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        {errors.password.message}
+                      </p>
+                    )}
                   </div>
                   {/* First name */}
                   <div>
@@ -305,7 +315,10 @@ const Account = () => {
                   {/* Role */}
                   <div>
                     <label className="label-form">Phân quyền</label>
-                    <select {...register("role")} className="form-input">
+                    <select
+                      {...register("role", { required: true })}
+                      className="form-input"
+                    >
                       <option value="">--- Chọn ---</option>
                       {ROLES.map((item, index) => (
                         <option value={item.value} key={index}>
@@ -313,6 +326,11 @@ const Account = () => {
                         </option>
                       ))}
                     </select>
+                    {errors.role && (
+                      <p className="text-red-500 mt-1 text-sm">
+                        Vui lòng chọn phân quyền
+                      </p>
+                    )}
                   </div>
                   {/*  */}
                 </div>
