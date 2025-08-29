@@ -7,6 +7,7 @@ import {
 } from "../../components/ui/table";
 import { MdDelete } from "react-icons/md";
 import { FaEye, FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 type User = {
   id: number;
@@ -22,12 +23,31 @@ type User = {
 interface Props {
   headers: string[];
   users: User[] | null;
-  onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
+  onDelete: (id: string | number) => void;
+  onEdit: (id: string | number) => void;
 }
 
 // Define the table data using the interface
 const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
+  const handleDelete = (id: string | number) => {
+    Swal.fire({
+      icon: "warning",
+      title: "Thông báo",
+      text: "Bạn có chắc với quyết định của mình ?",
+      confirmButtonText: "Xóa",
+      confirmButtonColor: "#E62727",
+      showDenyButton: true,
+      denyButtonText: "Quay lại",
+      denyButtonColor: "#44444E",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onDelete(id);
+      } else {
+        return;
+      }
+    });
+  };
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -83,7 +103,8 @@ const TableAccount = ({ headers, users, onDelete, onEdit }: Props) => {
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start grid grid-cols-1 md:grid-cols-2">
                     <div>
-                      <button>
+                      {/* <button onClick={() => onDelete(record.id)}> */}
+                      <button onClick={() => handleDelete(record.id)}>
                         <MdDelete
                           size={30}
                           className="text-red-800 dark:text-red-400"

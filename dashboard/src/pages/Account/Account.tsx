@@ -138,7 +138,7 @@ const Account = () => {
     });
   };
 
-  const featureDetail = async (id: string | number) => {
+  const featureDelete = async (id: string | number) => {
     if (!id) {
       Swal.fire({
         icon: "error",
@@ -148,9 +148,19 @@ const Account = () => {
       return;
     }
     try {
-      const response = await axiosInstance.get(`/users/${id}/`);
-      if (response.status == 200 || response.status == 201) {
-        setAccount(response.data);
+      const response = await axiosInstance.delete(`/users/${id}/`);
+      if (response.status == 204) {
+        Swal.fire({
+          icon: "success",
+          title: "Thông báo",
+          text: "Xóa thành công",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          } else {
+            window.location.reload();
+          }
+        });
       }
     } catch (err: any) {
       console.error(err);
@@ -369,7 +379,7 @@ const Account = () => {
           <TableAccount
             headers={headers}
             users={users}
-            onDelete={() => {}}
+            onDelete={featureDelete}
             onEdit={() => {}}
           />
         ) : (
