@@ -130,13 +130,15 @@ const Account = () => {
         ...checkedData,
       });
       if (response.status == 200) {
+        closeModalUpdate();
         Swal.fire({
           icon: "success",
           title: "Thông báo",
           text: "Cập nhật tài khoản thành công",
         }).then((result) => {
-          closeModalUpdate();
           if (result.isConfirmed) {
+            window.location.reload();
+          } else {
             window.location.reload();
           }
         });
