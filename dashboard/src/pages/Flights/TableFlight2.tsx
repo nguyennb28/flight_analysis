@@ -31,6 +31,9 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
                         text-start text-lg dark:text-gray-400 uppercase
                     "
                 >
+                  {header == "" && (
+                    <input type="checkbox" className="select-all" />
+                  )}
                   {header}
                 </TableCell>
               ))}
@@ -45,6 +48,9 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
                     attrs.map((attr, i) => (
                       <TableCell key={i} className="sm:px-6 text-start">
                         {/* <p className="dark:text-white">{attr != "stt" || attr != "features" ? }</p> */}
+                        {attr == "checkbox" && (
+                          <input type="checkbox" value={flight.id} />
+                        )}
                         {attr == "stt" && (
                           <p className="dark:text-white">{index}</p>
                         )}
