@@ -464,7 +464,6 @@ class ReportFlightDate(APIView):
         passengers = list(Passenger.objects.filter(flight_id__in=flight_ids).values())
 
         results = self.report(passengers)
-        print(results)
 
         return Response(
             {"record": results["record"], "report": results["report"]},
@@ -512,4 +511,17 @@ class ReportFlightDate(APIView):
                 "destination_point",
                 "flight__flight_date",
             )
+        )
+        
+    def post(self, request, *args, **kwargs):
+        flight_ids = request.data["ids"]
+        if not flight_ids:
+            return Response({
+                "msg": "Flight ids are empty"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        passengers = list(Passenger.objects.filter(flight_id__in=flight_ids).values())
+        results = self.report(passengers)
+        return Response(
+            {"data": results},
+            status=status.HTTP_200_OK
         )
