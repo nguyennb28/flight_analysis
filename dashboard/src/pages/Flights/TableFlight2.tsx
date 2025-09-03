@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useEffect } from "react";
+import { useState, MouseEvent } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FlightType } from "../../types/general_type";
 import {
