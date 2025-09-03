@@ -15,7 +15,6 @@ const Flight = () => {
   const [flights, setFlights] = useState<FlightType[] | null>(null);
   const [isDetail, setIsDetail] = useState<boolean>(false);
   const [flight, setFlight] = useState<FlightType | null>(null);
-  const [selectIds, setSelectIds] = useState<string[] | number[] | null>(null);
 
   const navigate = useNavigate();
 
@@ -160,16 +159,6 @@ const Flight = () => {
               onClick={handleUpload}
             >
               Tải file excel
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Feature */}
-      <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-        <div className="grid grid-cols-3">
-          <div>
-            <button className="rounded-2xl border p-5 bg-blue-light-800 text-white shadow-2xs">
-              Lọc
             </button>
           </div>
         </div>
