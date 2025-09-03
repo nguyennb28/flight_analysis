@@ -8,6 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
+import { Modal } from "../../components/ui/modal";
+import Swal from "sweetalert2";
+import axiosInstance from "../../instance/axiosInstance";
+import TableReport from "./TableReport";
 
 interface Props {
   headers: any[] | null;
@@ -18,6 +22,12 @@ interface Props {
 
 const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isReport, setIsReport] = useState<boolean>(false);
+  const [reports, setReports] = useState<any[]>([]);
+  const [records, setRecords] = useState<any[]>([]);
+
+  const report_headers = ["Số lần bay", "Tên", "Số giấy tờ"];
+  const report_attributes = ["travel_times", "name", "number_of_document"];
 
   const handleSelect = (e: MouseEvent<HTMLInputElement>) => {
     const isChecked = e.currentTarget.checked;
@@ -29,9 +39,47 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectedIds);
-  }, [selectedIds]);
+  const handleReport = async (flight_ids: string[] | null) => {
+    if (!flight_ids) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Hãy lựa chọn chuyến bay",
+      });
+      return;
+    }
+    try {
+      const response = await axiosInstance.post(`/report-flight-date/`, {
+        flight_ids,
+      });
+      if (response.status == 200) {
+        const { record, report } = response.data.data;
+        setRecords(record);
+        setReports(report);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setIsReport(false);
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Có lỗi trong việc lấy thông tin",
+      });
+    }
+  };
+
+  const openModalReport = (flight_ids: string[]) => {
+    if (flight_ids.length < 1) {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Hãy lựa chọn chuyến bay",
+      });
+      return;
+    }
+    setIsReport(true);
+    handleReport(flight_ids);
+  };
 
   return (
     <>
@@ -39,7 +87,12 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
       <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="grid grid-cols-3">
           <div>
-            <button className="rounded-2xl border p-5 bg-blue-light-800 text-white shadow-2xs">
+            <button
+              className="rounded-2xl border p-5 bg-blue-light-800 text-white shadow-2xs"
+              onClick={() => {
+                openModalReport(selectedIds);
+              }}
+            >
               Lọc
             </button>
           </div>
@@ -110,9 +163,27 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
           </>
         )}
       </Table>
+      <Modal
+        isOpen={isReport}
+        onClose={() => setIsReport(false)}
+        className="max-w-[100vw] m-4"
+      >
+        <div className="relative w-full max-h-[90vh] p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+          {!records && (
+            <h3 className="text-red-500 text-2xl uppercase font-semibold">
+              Không lấy được dữ liệu
+            </h3>
+          )}
+          {reports.length > 1 && (
+            <TableReport
+              headers={report_headers}
+              attributes={report_attributes}
+              records={reports}
+            />
+          )}
+        </div>
+      </Modal>
     </>
-    // <ComponentCard title="">
-    // </ComponentCard>
   );
 };
 

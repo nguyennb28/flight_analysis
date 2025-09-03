@@ -514,7 +514,7 @@ class ReportFlightDate(APIView):
         )
         
     def post(self, request, *args, **kwargs):
-        flight_ids = request.data["ids"]
+        flight_ids = request.data["flight_ids"]
         if not flight_ids:
             return Response({
                 "msg": "Flight ids are empty"
