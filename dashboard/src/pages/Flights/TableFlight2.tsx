@@ -174,7 +174,7 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
               Không lấy được dữ liệu
             </h3>
           )}
-          {reports.length >= 1 && (
+          {reports.length > 0 && (
             <TableReport
               headers={report_headers}
               attributes={report_attributes}
