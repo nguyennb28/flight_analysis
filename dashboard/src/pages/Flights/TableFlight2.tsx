@@ -1,5 +1,5 @@
 import { useState, MouseEvent } from "react";
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdRemoveRedEye, MdOutlineStar } from "react-icons/md";
 import { FlightType } from "../../types/general_type";
 import {
   Table,
@@ -112,7 +112,9 @@ const TableFlight = ({ headers, flights, attrs, handleDetail }: Props) => {
                     "
                   >
                     {header == "" && (
-                      <input type="checkbox" className="select-all" />
+                      <div className="p-1 rounded-3xl bg-red-600">
+                        <MdOutlineStar size={30} className="text-yellow-300" />
+                      </div>
                     )}
                     {header}
                   </TableCell>
