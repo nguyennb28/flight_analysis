@@ -525,3 +525,6 @@ class ReportFlightDate(APIView):
             {"data": results},
             status=status.HTTP_200_OK
         )
+
+def forbidden_access_view(request):
+    return render(request, 'forbidden.html')

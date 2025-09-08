@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from data_analysis.views import UploadExcel, ReportFlightGeneral, ReportFlightDate
+from data_analysis.views import UploadExcel, ReportFlightGeneral, ReportFlightDate, forbidden_access_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -35,4 +35,5 @@ urlpatterns = [
     path(
         "api/report-flight-date/", ReportFlightDate.as_view(), name="report-flight-date"
     ),
+    path("forbidden/", forbidden_access_view, name="forbidden")
 ]
