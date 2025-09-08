@@ -11,7 +11,6 @@ class IPWhiteListMiddleware:
         ip_address = request.META.get("REMOTE_ADDR")
 
         if ip_address not in self.allowed_ips:
-            # return HttpResponseForbidden("Truy cập bị từ chối")
             return forbidden_access_view(request)
 
         response = self.get_response(request)

@@ -62,7 +62,7 @@ export default function UserProfiles() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access) {
+    if (!access || access == "undefined") {
       navigate("/signin", { replace: true });
     }
   }, []);

@@ -3,6 +3,7 @@ import PageMeta from "../../components/common/PageMeta";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export default function Home() {
   const { logout } = useAuth();
@@ -10,7 +11,12 @@ export default function Home() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access) {
+    if (!access || access == "undefined") {
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể truy cập!",
+      });
       logout();
       navigate("/signin", { replace: true });
     }

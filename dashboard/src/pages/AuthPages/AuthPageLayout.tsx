@@ -21,7 +21,7 @@ export default function AuthLayout({
                 <img
                   width={231}
                   height={48}
-                  src="/images/logo/flight.svg"
+                  src="/images/logo/logo_flight.png"
                   alt="Logo"
                 />
               </Link>
