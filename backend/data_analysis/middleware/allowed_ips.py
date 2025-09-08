@@ -1,6 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponseForbidden
-from data_analysis.views import forbidden_access_view 
+from data_analysis.views import forbidden_access_view
 
 class IPWhiteListMiddleware:
     def __init__(self, get_response):
