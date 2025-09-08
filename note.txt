@@ -1,3 +1,8 @@
 https://d6f1e23785f1.ngrok-free.app/
 username: admin
 password: password
+
+- Không được đẩy các file sau lên git:
+    1. settings.py
+    2. .env
+    3. axiosInstance.ts
