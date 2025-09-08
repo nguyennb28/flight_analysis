@@ -72,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "data_analysis.middleware.allowed_ips.IPWhiteListMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -79,7 +80,7 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -135,7 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC"
+TIME_ZONE="Asia/Ho_Chi_Minh"
 
 USE_I18N = True
 
@@ -155,3 +157,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 AUTH_USER_MODEL = "data_analysis.User"
+ALLOWED_IPS = [
+    "127.0.0.1",
+    "123.27.253.122",
+    "113.160.206.118",
+    "113.160.206.35",
+    "160.187.146.161"
+]
