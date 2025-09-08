@@ -11,14 +11,17 @@ export default function Home() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access || access == "undefined") {
+    if (!access) {
+      logout();
+      navigate("/signin", { replace: true });
+    } else if (access == "undefined") {
+      navigate("/signin", { replace: true });
+      logout();
       Swal.fire({
         icon: "error",
         title: "Thông báo",
         text: "Không thể truy cập!",
       });
-      logout();
-      navigate("/signin", { replace: true });
     }
   }, []);
 

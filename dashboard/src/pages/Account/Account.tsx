@@ -46,7 +46,7 @@ const Account = () => {
   const navigate = useNavigate();
 
   // Context
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   // Form
   const {
@@ -268,9 +268,17 @@ const Account = () => {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access || access == "undefined") {
+    if (!access) {
       navigate("/signin", { replace: true });
       return;
+    } else if (access == "undefined") {
+      navigate("/signin", { replace: true });
+      logout();
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể truy cập!",
+      });
     }
     getUsers();
   }, []);

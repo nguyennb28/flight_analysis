@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 
 export default function UserProfiles() {
   // Context
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { loading, showLoading, hideLoading } = useLoading();
   const navigate = useNavigate();
 
@@ -62,8 +62,16 @@ export default function UserProfiles() {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access || access == "undefined") {
+    if (!access) {
       navigate("/signin", { replace: true });
+    } else if (access == "undefined") {
+      navigate("/signin", { replace: true });
+      logout();
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể truy cập!",
+      });
     }
   }, []);
 

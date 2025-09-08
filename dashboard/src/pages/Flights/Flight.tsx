@@ -8,6 +8,7 @@ import TableFlight from "./TableFlight2";
 import { FlightType } from "../../types/general_type";
 import { Modal } from "../../components/ui/modal";
 import FlightDetail from "./FlightDetail";
+import { useAuth } from "../../context/AuthContext";
 
 const Flight = () => {
   // State
@@ -15,6 +16,8 @@ const Flight = () => {
   const [flights, setFlights] = useState<FlightType[] | null>(null);
   const [isDetail, setIsDetail] = useState<boolean>(false);
   const [flight, setFlight] = useState<FlightType | null>(null);
+
+  const { logout } = useAuth();
 
   const navigate = useNavigate();
 
@@ -130,9 +133,17 @@ const Flight = () => {
 
   useEffect(() => {
     const access = localStorage.getItem("access");
-    if (!access || access == "undefined") {
+    if (!access) {
       navigate("/signin", { replace: true });
       return;
+    } else if (access == "undefined") {
+      navigate("/signin", { replace: true });
+      logout();
+      Swal.fire({
+        icon: "error",
+        title: "Thông báo",
+        text: "Không thể truy cập!",
+      });
     }
     fetch_flights();
   }, []);
