@@ -7,7 +7,12 @@ class IPWhiteListMiddleware:
         self.allowed_ips = getattr(settings, "ALLOWED_IPS", [])
 
     def __call__(self, request):
-        ip_address = request.META.get("REMOTE_ADDR")
+        ip_address = request.META.get("HTTP_X_FORWARDED_FOR")
+
+        if ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+        else:
+            ip_address = request.META.get("REMOTE_ADDR")
 
         if ip_address not in self.allowed_ips:
             return forbidden_access_view(request)
