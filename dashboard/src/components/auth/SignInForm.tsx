@@ -6,10 +6,11 @@ import Button from "../ui/button/Button";
 import Swal from "sweetalert2";
 
 interface SignInFormProps {
+  ipClient?: string | null;
   onSubmit: (username: string, password: string) => void;
 }
 
-const SignInForm = ({ onSubmit }: SignInFormProps) => {
+const SignInForm = ({ ipClient, onSubmit }: SignInFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -89,6 +90,7 @@ const SignInForm = ({ onSubmit }: SignInFormProps) => {
                     Sign in
                   </Button>
                 </div>
+                {ipClient && <div className="text-end">IP Address: <span className="font-bold text-blue-400">{ipClient && ipClient}</span></div>}
               </div>
             </form>
           </div>

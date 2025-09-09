@@ -3,12 +3,14 @@ import AuthLayout from "./AuthPageLayout";
 import SignInForm from "../../components/auth/SignInForm";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function SignIn() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [ipClient, setIpClient] = useState<string>("");
 
   const onSubmit = async (username: string, password: string) => {
     try {
@@ -26,11 +28,20 @@ export default function SignIn() {
     }
   };
 
+  const getIpClient = async () => {
+    const response = await axios.get(`https://ipinfo.io/json`);
+    if (response.status == 200) {
+      const { data } = response;
+      setIpClient(data.ip);
+    }
+  };
+
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (access) {
       navigate("/", { replace: true });
     }
+    getIpClient();
   }, []);
 
   return (
@@ -40,7 +51,7 @@ export default function SignIn() {
         description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <AuthLayout>
-        <SignInForm onSubmit={onSubmit} />
+        <SignInForm onSubmit={onSubmit} ipClient={ipClient ? ipClient : null} />
       </AuthLayout>
     </>
   );
