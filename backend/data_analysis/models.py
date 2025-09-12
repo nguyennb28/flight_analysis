@@ -147,8 +147,8 @@ class PassengerPNR(models.Model):
     flight_itinerary = models.CharField(
         max_length=50, blank=True, null=True, verbose_name="Hành trình bay"
     )
-    address = models.CharField(
-        max_length=25, blank=True, null=True, verbose_name="Địa chỉ"
+    address = models.TextField(
+        blank=True, null=True, verbose_name="Địa chỉ"
     )
     phone_email = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Phone/Email"
