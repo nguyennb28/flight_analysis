@@ -65,6 +65,7 @@ class UploadExcel(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     SHEET_NAMES = ["Chuyenbay", "Thongtinchung", "Hanhkhach", "PNR"]
+    SHEET_NAMES_SECOND = ["Chuyen bay", "Thong tin chung", "Hành khách", "PNR"]
     LABEL_NAMES = [
         {
             "sheet": "Chuyenbay",
@@ -163,6 +164,104 @@ class UploadExcel(APIView):
             "second_nrows": None,
         },
     ]
+    LABEL_NAMES_SECOND = [
+        {
+            "sheet": "Chuyen bay",
+            "headers": ["Thông tin chuyến bay"],
+            "first_row": [
+                "Hãng vận chuyển",
+                "Nhãn hiệu quốc tịch",
+                "Số chuyến bay",
+                "Ngày bay",
+                "Nơi đi",
+                "Nơi đến",
+                "Đường bay",
+                "Nơi quá cảnh",
+            ],
+            "second_row": None,
+            "first_skiprow": 2,
+            "second_skiprow": None,
+            "first_nrows": None,
+            "second_nrows": None,
+        },
+        {
+            "sheet": "Thong tin chung",
+            "headers": ["Thông tin chung", "Danh sách thành viên tổ bay"],
+            "first_row": [
+                "Số khách",
+                "Nơi đi",
+                "Nơi xuất cảnh",
+                "Through on same flight",
+                "Nơi đến",
+                "Nơi nhập cảnh",
+                "Through on same flight",
+            ],
+            "second_row": [
+                "Họ và tên",
+                "Giới tính",
+                "Quốc tịch",
+                "Ngày sinh",
+                "Số giấy tờ",
+                "Loại giấy tờ",
+                "Nơi cấp",
+                "Ngày hết hạn",
+            ],
+            "first_skiprow": 2,
+            "second_skiprow": 7,
+            "first_nrows": 1,
+            "second_nrows": None,
+        },
+        {
+            "sheet": "Hành khách",
+            "headers": ["Danh sách hành khách"],
+            "first_row": [
+                "Số ghế",
+                "Họ và tên",
+                "Giới tính",
+                "Quốc tịch",
+                "Ngày sinh",
+                "Loại giấy tờ",
+                "Số giấy tờ",
+                "Nơi cấp",
+                "Quốc gia cư trú",
+                "Nơi đi",
+                "Nơi đến",
+                "Cảng hàng không đầu tiên",
+                "Hành lý",
+                "Ngày hết hạn",
+            ],
+            "second_row": None,
+            "first_skiprow": 2,
+            "second_skiprow": None,
+            "first_nrows": None,
+            "second_nrows": None,
+        },
+        {
+            "sheet": "PNR",
+            "headers": ["Danh sách hành khách PNR"],
+            "first_row": [
+                "Mã đặt chỗ",
+                "Ngày đặt chỗ",
+                "Thông tin vé",
+                "Tên hành khách",
+                "Tên khác",
+                "Hành trình bay",
+                "Địa chỉ",
+                "Điện thoại/Email",
+                "Thông tin liên hệ",
+                "Số lượng hành khách chung mã đặt chỗ",
+                "Mã người đặt chỗ",
+                "Số ghế",
+                "Thông tin hành lý",
+                "Ghi chú",
+            ],
+            "second_row": None,
+            "first_skiprow": 2,
+            "second_skiprow": None,
+            "first_nrows": None,
+            "second_nrows": None,
+        },
+    ]
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
@@ -173,53 +272,133 @@ class UploadExcel(APIView):
             )
         for elem in uploaded_files:
             flight_id = self.create_flight_from_file(elem)
-            if not flight_id:
-                return Response(
-                    {"message": "Không thể xử lý thông tin chuyến bay"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        #     if not flight_id:
+        #         return Response(
+        #             {"message": "Không thể xử lý thông tin chuyến bay"},
+        #             status=status.HTTP_400_BAD_REQUEST,
+        #         )
 
-            sheet_to_process = ["Thongtinchung", "Hanhkhach", "PNR"]
-            for sheet_name in sheet_to_process:
-                self.process_data_sheet(elem, sheet_name, flight_id)
-        return Response(
-            {"message": "Xử lý các file thành công"}, status=status.HTTP_201_CREATED
-        )
+        #     sheet_to_process = ["Thongtinchung", "Hanhkhach", "PNR"]
+        #     for sheet_name in sheet_to_process:
+        #         self.process_data_sheet(elem, sheet_name, flight_id)
+        # return Response(
+        #     {"message": "Xử lý các file thành công"}, status=status.HTTP_201_CREATED
+        # )
+        return Response({"message": "Check"}, status=status.HTTP_201_CREATED)
 
     def create_flight_from_file(self, file):
         config = next(
             (item for item in self.LABEL_NAMES if item["sheet"] == "Chuyenbay"), None
         )
+
         if not config:
             return None
 
-        raw = pd.read_excel(
-            file,
-            sheet_name="Chuyenbay",
-            skiprows=config["first_skiprow"],
-            usecols=config["first_row"],
-            keep_default_na=False,
-        )
-        raw = raw.rename(
-            columns={
-                "Hãng vận chuyển": "brand",
-                "Nhãn hiệu quốc tịch": "nationality_label",
-                "Số chuyến bay": "flight_number",
-                "Ngày bay": "flight_date",
-                "Nơi đi": "departure_point",
-                "Nơi đến": "destination_point",
-                "Đường bay": "flight_path",
-                "Nơi quá cảnh": "trasit_place",
-            }
-        )
-        raw["flight_date"] = pd.to_datetime(
-            raw["flight_date"], format="%d/%m/%Y", errors="coerce"
+        try:
+            raw = pd.read_excel(
+                file,
+                sheet_name="Chuyenbay",
+                skiprows=config["first_skiprow"],
+                usecols=config["first_row"],
+                keep_default_na=False,
+            )
+            raw = pd.read_excel(
+                file,
+                sheet_name="Chuyenbay",
+                skiprows=config["first_skiprow"],
+                usecols=config["first_row"],
+                keep_default_na=False,
+            )
+            raw = raw.rename(
+                columns={
+                    "Hãng vận chuyển": "brand",
+                    "Nhãn hiệu quốc tịch": "nationality_label",
+                    "Số chuyến bay": "flight_number",
+                    "Ngày bay": "flight_date",
+                    "Nơi đi": "departure_point",
+                    "Nơi đến": "destination_point",
+                    "Đường bay": "flight_path",
+                    "Nơi quá cảnh": "trasit_place",
+                }
+            )
+            raw["flight_date"] = pd.to_datetime(
+                raw["flight_date"], format="%d/%m/%Y", errors="coerce"
+            )
+
+            flight_data = raw.to_dict("records")[0]
+
+            # flight = Flight.objects.create(**flight_data)
+            # return flight.id
+            print(flight_data)
+        except Exception as e:
+            print("error can not read excel")
+            return self.create_flight_from_file_with_another_name(file)
+            # return None
+
+        # raw = pd.read_excel(
+        #     file,
+        #     sheet_name="Chuyenbay",
+        #     skiprows=config["first_skiprow"],
+        #     usecols=config["first_row"],
+        #     keep_default_na=False,
+        # )
+        # raw = raw.rename(
+        #     columns={
+        #         "Hãng vận chuyển": "brand",
+        #         "Nhãn hiệu quốc tịch": "nationality_label",
+        #         "Số chuyến bay": "flight_number",
+        #         "Ngày bay": "flight_date",
+        #         "Nơi đi": "departure_point",
+        #         "Nơi đến": "destination_point",
+        #         "Đường bay": "flight_path",
+        #         "Nơi quá cảnh": "trasit_place",
+        #     }
+        # )
+        # raw["flight_date"] = pd.to_datetime(
+        #     raw["flight_date"], format="%d/%m/%Y", errors="coerce"
+        # )
+
+        # flight_data = raw.to_dict("records")[0]
+
+        # flight = Flight.objects.create(**flight_data)
+        # return flight.id
+
+    def create_flight_from_file_with_another_name(self, file):
+        config = next(
+            (item for item in self.LABEL_NAMES_SECOND if item["sheet"] == "Chuyen bay"),
+            None,
         )
 
-        flight_data = raw.to_dict("records")[0]
+        if not config:
+            return None
 
-        flight = Flight.objects.create(**flight_data)
-        return flight.id
+        try:
+            raw = pd.read_excel(
+                file,
+                sheet_name="Chuyen bay",
+                skiprows=config["first_skiprow"],
+                usecols=config["first_row"],
+                keep_default_na=False,
+            )
+            raw = raw.rename(
+                columns={
+                    "Hãng vận chuyển": "brand",
+                    "Nhãn hiệu quốc tịch": "nationality_label",
+                    "Số chuyến bay": "flight_number",
+                    "Ngày bay": "flight_date",
+                    "Nơi đi": "departure_point",
+                    "Nơi đến": "destination_point",
+                    "Đường bay": "flight_path",
+                    "Nơi quá cảnh": "trasit_place",
+                }
+            )
+            raw["flight_date"] = pd.to_datetime(
+                raw["flight_date"], format="%d/%m/%Y", errors="coerce"
+            )
+            flight_data = raw.to_dict("records")[0]
+            print(f"flight_data: {flight_data}")
+        except Exception as e:
+            raise
 
     def process_data_sheet(self, file, sheet_name, flight_id):
         config = next(
@@ -512,19 +691,17 @@ class ReportFlightDate(APIView):
                 "flight__flight_date",
             )
         )
-        
+
     def post(self, request, *args, **kwargs):
         flight_ids = request.data["flight_ids"]
         if not flight_ids:
-            return Response({
-                "msg": "Flight ids are empty"
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"msg": "Flight ids are empty"}, status=status.HTTP_400_BAD_REQUEST
+            )
         passengers = list(Passenger.objects.filter(flight_id__in=flight_ids).values())
         results = self.report(passengers)
-        return Response(
-            {"data": results},
-            status=status.HTTP_200_OK
-        )
+        return Response({"data": results}, status=status.HTTP_200_OK)
+
 
 def forbidden_access_view(request):
-    return render(request, 'forbidden.html')
+    return render(request, "forbidden.html")
